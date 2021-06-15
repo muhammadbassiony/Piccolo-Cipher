@@ -63,7 +63,7 @@ def generate_white_keys(bit, key):
     else:
         raise InvalidValue('bit=' + str(bit), 'The value of bit can be 80 or 128')
 
-    print('WHITE KEYS GENNED :: ', wk)
+    # print('WHITE KEYS GENNED :: ', wk)
 
     return wk
 
@@ -71,7 +71,7 @@ def generate_white_keys(bit, key):
 
 
 def generate_round_keys(bit, key):
-    print('\ROUND KEY GEN STARTS HERE\nPARAMS :: BIT :: KEY :: ', bit, key, '\n')
+    # print('\ROUND KEY GEN STARTS HERE\nPARAMS :: BIT :: KEY :: ', bit, key, '\n')
     ikey = int(key, 16)
     skey = str(key)
     k = []
@@ -97,7 +97,7 @@ def generate_round_keys(bit, key):
         r = 31
 
     rk = np.array(['0'*16 for _ in range(2*r + 1)])
-    print(rk.shape)
+    # print(rk.shape)
 
     if bit == 80:
         for i in range(r-1):
@@ -108,7 +108,7 @@ def generate_round_keys(bit, key):
             con2i = con[0:16]
             con2i_1 = hex(int(con2i_1, 2))
             con2i = hex(int(con2i, 2))
-            print('CON80 RK :: ', i, con, con2i, con2i_1)
+            # print('CON80 RK :: ', i, con, con2i, con2i_1)
 
             if i % 5 == 2 or i % 5 == 0:
                 a = int(k[2], 16)
@@ -202,7 +202,7 @@ def generate_round_keys(bit, key):
     else:
         raise InvalidValue('bit=' + str(bit), 'The value of bit can be 80 or 128')
 
-    print('ROUND KEYS GENNED :: ', rk)
+    # print('ROUND KEYS GENNED :: ', rk)
     return rk
 
 

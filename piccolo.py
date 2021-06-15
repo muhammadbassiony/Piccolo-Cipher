@@ -1,4 +1,4 @@
-import piccolokeygen, piccoloencrypt, piccolodecrypt, piccolokeyscheduling
+import piccolokeygen, piccoloencrypt, piccolodecrypt, piccolokeyscheduling, utils
 import binascii
 
 class Piccolo:
@@ -25,17 +25,21 @@ class Piccolo:
 
         print('ENCRYPT 1 :: ', string)
 
-        for i in range(0,len(string),16):
-            ascii.append(string[i:i+16])
+        blocks = utils.create_blocks(string)
 
-        print('ENCRYPT 2 :: ', ascii)
-        print('ENCRYPT 2.1 :: ', self.bit, self.key, '\n WK :: ', self.wk, '\n RK :: ', self.rk)
+        for b in blocks:
+            print(b, len(b))
 
-        for i in range(len(ascii)):
-            cipher.append(piccoloencrypt.encrypt(ascii[i], self.key,self.wk,self.rk, self.bit))
-        print(cipher)
-        for i in range(len(cipher)):
-            estring+=(format(cipher[i], 'x'))
+        # for i in range(0,len(string),16):
+        #     ascii.append(string[i:i+16])
+
+        # print('ENCRYPT 2.1 :: ', self.bit, self.key, '\n WK :: ', self.wk, '\n RK :: ', self.rk)
+
+        # for i in range(len(ascii)):
+        #     cipher.append(piccoloencrypt.encrypt(ascii[i], self.key,self.wk,self.rk, self.bit))
+        # print(cipher)
+        # for i in range(len(cipher)):
+        #     estring+=(format(cipher[i], 'x'))
 
         return estring
 
@@ -61,7 +65,7 @@ class Piccolo:
 # **************************
 
 p = Piccolo(bit=128)
-#cipher=p.encrypt("abcdef0123456789abcdef0123456789")
+cipher = p.encrypt("helloworld")
 #plain=p.decrypt(cipher)
-#print(cipher)
+print(cipher)
 # print(plain)
