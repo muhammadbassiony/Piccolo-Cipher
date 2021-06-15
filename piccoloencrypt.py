@@ -54,7 +54,14 @@ def encrypt(X, key,wk,rk, bit):
         xr4 = xor_bin(xr3, rk[2*i + 1])
         x[3] = xr4
 
-        print(x)
+        xp = ''.join([j for j in x])
+        # print(x, xp, len(xp))
+
+        x = piccoloroundpermutation.round_permutation(xp)
+
+    print(x)
+
+
         # print(f1, rk[2*i], x[0], xr1, xr2, len(xr1), len(xr2))
 
     # piccoloffunction.ffunction(x[0])
