@@ -6,7 +6,7 @@ class InvalidValue(Exception):
 
 
 def generate_white_keys(bit, key):
-    print('\nWHITE KEY GEN STARTS HERE\nPARAMS :: BIT :: KEY :: ', bit, key, '\n')
+    # print('\nWHITE KEY GEN STARTS HERE\nPARAMS :: BIT :: KEY :: ', bit, key, '\n')
     ikey = int(key, 16)
     k = []
     wk = []
@@ -30,28 +30,38 @@ def generate_white_keys(bit, key):
         n1 = i
         n2 = i-4
         sub = skey[n2:n1]
-        print(i, '\t', n2, n1, skey[n2:n1], len(skey[n2:n1]))
+        # print(i, '\t', n2, n1, skey[n2:n1], len(skey[n2:n1]))
         #print(hex(int(sub, 2)))
         k2.append(sub)
 
     # print('AFTER K :: ', k)
     k2.reverse()
-    # print('AFTER K2 :: ', k2)
 
+
+    #convert strings to hex
+    for i in k2:
+        hex_int = int(i, 16)
+        hexx = hex(hex_int)
+        k.append(hexx)
+
+    # print('AFTER K2 :: ', k2, k)
 
     if bit == 80:
-        wk.append((k[0] & 0xffff0000) | (k[1] & 0x0000ffff))
-        wk.append((k[1] & 0xffff0000) | (k[0] & 0x0000ffff))
-        wk.append((k[4] & 0xffff0000) | (k[3] & 0x0000ffff))
-        wk.append((k[3] & 0xffff0000) | (k[4] & 0x0000ffff))
+        wk.append(k2[0][:2] + k2[1][2:])
+        wk.append(k2[1][:2] + k2[0][2:])
+        wk.append(k2[4][:2] + k2[3][2:])
+        wk.append(k2[3][:2] + k2[4][2:])
 
     elif bit == 128:
-        wk.append((k[0] & 0xffff0000) | (k[1] & 0x0000ffff))
-        wk.append((k[1] & 0xffff0000) | (k[0] & 0x0000ffff))
-        wk.append((k[4] & 0xffff0000) | (k[7] & 0x0000ffff))
-        wk.append((k[7] & 0xffff0000) | (k[4] & 0x0000ffff))
+        wk.append(k2[0][:2] + k2[1][2:])
+        wk.append(k2[1][:2] + k2[0][2:])
+        wk.append(k2[4][:2] + k2[7][2:])
+        wk.append(k2[7][:2] + k2[4][2:])
+
     else:
         raise InvalidValue('bit=' + str(bit), 'The value of bit can be 80 or 128')
+
+    # print('WHITE KEYS GENNED :: ', wk)
 
     return wk
 
