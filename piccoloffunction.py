@@ -31,7 +31,7 @@ def ffunction(x):
         n=(x >> (4 * (3 - i))) & 0xf
         x4.append(hex(n))
     for i in range(len(x4)):
-        z=int(x4[i],16)
+        z=int(x4[i], 16)
         x4[i]=hex(sbox[z])
         
     F = ffield.FField(16)
