@@ -81,7 +81,6 @@ def generate_round_keys(bit, key):
     # for i in range(sbit):
     #     k.append((ikey >> (16 * (sbit - i - 1))) & 0x0000ffff)
 
-    k = []
     # split the key into subkeys
     for i in range(len(skey), 0, -4):
         n1 = i
@@ -90,14 +89,14 @@ def generate_round_keys(bit, key):
         k.append(sub)
 
     k.reverse()
-    print('SUB KEYS ::: ', k)
+    # print('SUB KEYS ::: ', k)
 
     if bit == 80:
         r = 25
     elif bit == 128:
         r = 31
 
-    rk = np.array(['a'*16 for _ in range(r*2)])
+    rk = np.array(['0'*16 for _ in range(2*r + 1)])
     print(rk.shape)
 
     if bit == 80:
@@ -166,6 +165,7 @@ def generate_round_keys(bit, key):
                 # print(con2i_1, type(con2i_1), k[3], type(k[3]), x, type(x), z, type(z), len(z))
                 # print(rk[2*i + 1])
                 # rk.append(con2i1 ^ k[4])
+
     elif bit == 128:
         for i in range(2*r - 1):
 
@@ -174,21 +174,35 @@ def generate_round_keys(bit, key):
             # split con
             con2i_1 = con[16:32]
             con2i = con[0:16]
+            con2i_1 = hex(int(con2i_1, 2))
+            con2i = hex(int(con2i, 2))
             # print('CON128 RK :: ', i, con, con2i, con2i_1)
-
+            # print('K NNOOTT UP :: ', k)
             if (i + 2) % 8 == 0:
                 tmp = k
-            #     k[0] = tmp[2]
-            #     k[2] = tmp[6]
-            #     k[3] = tmp[7]
-            #     k[4] = tmp[0]
-            #     k[5] = tmp[3]
-            #     k[6] = tmp[4]
-            #     k[7] = tmp[5]
+                k[0] = tmp[2]
+                k[2] = tmp[6]
+                k[3] = tmp[7]
+                k[4] = tmp[0]
+                k[5] = tmp[3]
+                k[6] = tmp[4]
+                k[7] = tmp[5]
+                # print('K SWITCHED UP :: ', k)
+
+            indx = (i + 1) % 8
+            # print(indx, k[indx], type(k[indx]), con2i, type(con2i))
+            a = int(k[indx], 16)
+            b = int(con2i[2:], 16)
+            # print(a, type(a), b, type(b))
+            x = a ^ b
+            z = bin(x)[2:].zfill(16)
+            # print('Z N X :: ', x, type(x), z, type(z), len(z))
+            rk[i] = z
             # rk.append(k[(i + 2) % 8] ^ _constant_value_128(i))
     else:
         raise InvalidValue('bit=' + str(bit), 'The value of bit can be 80 or 128')
 
+    print('ROUND KEYS GENNED :: ', rk)
     return rk
 
 

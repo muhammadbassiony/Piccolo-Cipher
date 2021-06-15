@@ -60,7 +60,7 @@ class Piccolo:
 
 # **************************
 
-p = Piccolo(bit=80)
+p = Piccolo(bit=128)
 #cipher=p.encrypt("abcdef0123456789abcdef0123456789")
 #plain=p.decrypt(cipher)
 #print(cipher)
