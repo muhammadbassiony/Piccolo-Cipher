@@ -4,19 +4,32 @@ def encrypt(X, key,wk,rk, bit):
     #wk = piccolokeyscheduling.generate_white_keys(bit, key)
     #rk = piccolokeyscheduling.generate_round_keys(bit, key)
 
-    return encryptAlgo(X, wk, rk, bit)
-    
+    x = []
+    for i in range(0, len(X), 16):
+        x.append(X[i:i+16])
+
+    # print(x, len(x[0]))
+
+    a = x[0]
+    a = hex(int(a, 2))
+
+    piccoloffunction.ffunction(x[0])
+    # return encryptAlgo(X, wk, rk, bit)
+    return " "
 
 def encryptAlgo(X, wk, rk, bit):
-    X=convertStringToInt(X)
+    X = convertStringToInt(X)
     x16 = convert64ToFour16s(X)
     x16[0] = x16[0] ^ wk[0]
     x16[2] = x16[2] ^ wk[1]
-    r = 0
+
+
     if bit == 80:
         r = 25
     else:
         r = 31
+
+
     print(x16[2])
     for i in range(r - 2):
         z=piccoloffunction.ffunction(x16[0])
@@ -30,6 +43,7 @@ def encryptAlgo(X, wk, rk, bit):
     x16[2] = x16[2] ^ wk[3]
     out=convertFour16sTo64(x16)
     return out
+
 
 
 

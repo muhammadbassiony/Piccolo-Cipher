@@ -28,12 +28,14 @@ class Piccolo:
         blocks = utils.create_blocks(string)
 
         for b in blocks:
-            print(b, len(b))
+            print('BLOCK ENTYERING :: ', b, len(b))
+            x = piccoloencrypt.encrypt(b, self.key, self.wk, self.rk, self.bit)
 
         # for i in range(0,len(string),16):
         #     ascii.append(string[i:i+16])
 
         # print('ENCRYPT 2.1 :: ', self.bit, self.key, '\n WK :: ', self.wk, '\n RK :: ', self.rk)
+
 
         # for i in range(len(ascii)):
         #     cipher.append(piccoloencrypt.encrypt(ascii[i], self.key,self.wk,self.rk, self.bit))
@@ -63,9 +65,3 @@ class Piccolo:
 
 
 # **************************
-
-p = Piccolo(bit=128)
-cipher = p.encrypt("helloworld")
-#plain=p.decrypt(cipher)
-print(cipher)
-# print(plain)

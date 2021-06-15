@@ -1,4 +1,7 @@
 from pyfinite import ffield
+import galois
+import numpy as np
+
 
 # S-Box Layer
 sbox = {
@@ -24,26 +27,67 @@ sbox = {
 M = [[2, 3, 1, 1], [1, 2, 3, 1], [1, 1, 2, 3], [3, 1, 1, 2]]
 
 # Pass 16 bit data and returns 16 bit data
-def ffunction(x):
-    #print(x)
-    x4 = []
-    for i in range(4):
-        n=(x >> (4 * (3 - i))) & 0xf
-        x4.append(hex(n))
-    for i in range(len(x4)):
-        z=int(x4[i], 16)
-        x4[i]=hex(sbox[z])
-        
-    F = ffield.FField(16)
-    x4d = []
-    for i in range(4):
-        for k in range(4):
-            sum = 0
-            sum += F.Multiply(M[i][k], int(x4[k],16))
-        x4d.append(sum)
+def ffunction(X):
+    # print('FFUNCTION BRO :: PARAM :: ', X, len(X), type(X))
 
-    new_x = 0
-    for i in range(4):
-        new_x = new_x | (x4d[i] << (4 * (3 - i)))
-        #print(bin(new_x[i]))
-    return new_x
+    x = []
+    x_hex = []
+    x_dec = []
+
+    for i in range(0, len(X), 4):
+        x.append(X[i:i + 4])
+        x_hex.append(hex(int(X[i:i + 4], 2)))
+        x_dec.append(int(X[i:i + 4], 2))
+
+    # print(x, len(x[0]), x_hex)
+
+    #first s-box
+    x_s1 = []
+    x_s1_dec = []
+    for z in x_hex:
+        a = sbox[0+int(z, 16)]
+        x_s1.append(hex(a))
+        x_s1_dec.append(a)
+
+    # print(x_s1, x_s1_dec)
+
+
+    #we are working in Galois Field of 2^4 as described by the paper
+    # a = 7
+    # F = ffield.FField(4)
+    # print(F.ShowPolynomial(a))
+
+    #create a Galois Field object
+    GF256 = galois.GF(2 ** 4)
+    # check that the irreducable poly is the same as described in the paper
+    # print(GF256.properties)
+    # print(GF256.irreducible_poly)
+
+    #converting our diffusion matrix to be in the field
+    M_GF = GF256(M)
+    #print('MATRIX IN GF(4) ::  ', M)
+
+    #convert X into the galois field
+    x_s1_GF = GF256(x_s1_dec)
+    #print('X_s1 in GF ::  ', x_s1_GF)
+
+    #perform the matrix multiplication
+    res = np.matmul(M_GF, x_s1_GF.T)
+    #print('RESULT OF MATRIX MULT IN GF(4) :: ', res)
+
+    #convert back to a normal array
+    res_int = np.array(res)
+    #print(res_int)
+
+    x_mult_hex = []
+    x_mult_dec = []
+    for c in res_int:
+        a = int(c)
+        a = hex(sbox[0+int(a)])
+        x_mult_dec.append(int(a, 16))
+        x_mult_hex.append(a)
+
+    print(x_mult_hex, x_mult_dec)
+
+
+    return  " "
