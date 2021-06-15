@@ -29,5 +29,15 @@ def create_blocks(string):
         # print('BLOCK CUT ::  ', fullblock)
 
 
+    return blocks
+
+
+def create_blocks_decipher(string):
+    #much simpler as its already padded from the encryption
+    blocks = []
+    for k in range(0, len(string), 64):
+        b = string[k:k+64]
+        # print(k, k+64, len(b))
+        blocks.append(b)
 
     return blocks

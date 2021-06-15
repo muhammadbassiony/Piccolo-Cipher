@@ -1,8 +1,9 @@
 from piccolo import Piccolo
 
-
 p = Piccolo(bit=128)
+
 cipher = p.encrypt("helloworld")
-#plain=p.decrypt(cipher)
-print(cipher, len(cipher))
-# print(plain)
+print('CIPHER DONE :: ', cipher, len(cipher))
+
+plain = p.decrypt(cipher)
+print(plain)

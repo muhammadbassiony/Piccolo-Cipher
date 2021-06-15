@@ -12,7 +12,6 @@ class Piccolo:
         self.wk = piccolokeyscheduling.generate_white_keys(bit, self.key) if wk == "" else wk
         self.rk = piccolokeyscheduling.generate_round_keys(bit, self.key) if rk == "" else rk
 
-        print('init done :: ', bit, key, '\n', wk, '\n', rk)
 
 
     def getKey(self):
@@ -23,8 +22,7 @@ class Piccolo:
         cipher = []
         estring = ""
 
-        print('ENCRYPT 1 :: ', string)
-
+        #create 64-bit blocks and add padding
         blocks = utils.create_blocks(string)
 
         for b in blocks:
@@ -37,21 +35,32 @@ class Piccolo:
 
         return estring
 
+
     def decrypt(self, estring):
         hexlist = []
         decipher = []
         string = ""
 
-        for i in range(0,len(estring),16):
-            hexlist.append(estring[i:i+16])
+        print('DECIPHER  1 :: ', estring, type(estring))
+        # create 64-bit blocks and add padding
+        blocks = utils.create_blocks_decipher(estring)
+        print('BLOCKS :: ', blocks)
 
-        for i in range(len(hexlist)):
-            decipher.append(piccolodecrypt.decrypt(int(hexlist[i], 16), self.key,self.wk,self.rk, self.bit))
+        for b in blocks:
+            print('ENTERING DECRYPT :: ', len(b), b)
+            d = piccolodecrypt.decrypt(b, self.key,self.wk,self.rk, self.bit)
+            break
 
-        print(decipher)
-
-        for i in range(len(decipher)):
-            string+=(format(decipher[i], 'x'))
+        # for i in range(0,len(estring),16):
+        #     hexlist.append(estring[i:i+16])
+        #
+        # for i in range(len(hexlist)):
+        #     decipher.append(piccolodecrypt.decrypt(int(hexlist[i], 16), self.key,self.wk,self.rk, self.bit))
+        #
+        # print(decipher)
+        #
+        # for i in range(len(decipher)):
+        #     string+=(format(decipher[i], 'x'))
 
         return string
 
