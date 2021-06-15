@@ -1,68 +1,62 @@
 import piccolokeyscheduling, piccoloffunction, piccoloroundpermutation
 
+
+def xor_bin(x, y):
+    # print('here', x, y)
+    a = int(x, 2)
+    b = int(y, 2)
+    # print(a, b)
+    z = bin(a ^ b)[2:].zfill(16)
+    # print(z)
+    return z
+
+
 def encrypt(X, key,wk,rk, bit):
     #wk = piccolokeyscheduling.generate_white_keys(bit, key)
     #rk = piccolokeyscheduling.generate_round_keys(bit, key)
-
-    x = []
-    for i in range(0, len(X), 16):
-        x.append(X[i:i+16])
-
-    # print(x, len(x[0]))
-
-    a = x[0]
-    a = hex(int(a, 2))
-
-    piccoloffunction.ffunction(x[0])
-    # return encryptAlgo(X, wk, rk, bit)
-    return " "
-
-def encryptAlgo(X, wk, rk, bit):
-    X = convertStringToInt(X)
-    x16 = convert64ToFour16s(X)
-    x16[0] = x16[0] ^ wk[0]
-    x16[2] = x16[2] ^ wk[1]
-
+    print('X RECEIVED PARAM ENCRYPT ::  ', X, '\nWK :: ', len(wk), wk, '\nRK :: ', len(rk), rk)
 
     if bit == 80:
         r = 25
-    else:
+    elif bit == 128:
         r = 31
 
+    x = []
+    x_hex = []
+    for i in range(0, len(X), 16):
+        a = X[i:i+16]
+        x.append(a)
+        x_hex.append(hex(int(a, 2)))
 
-    print(x16[2])
-    for i in range(r - 2):
-        z=piccoloffunction.ffunction(x16[0])
-        x16[1] = x16[1] ^ z ^ rk[2 * i]
-        x16[3] = x16[3] ^ piccoloffunction.ffunction(x16[2]) ^ rk[(2 * i) + 1]
-        x16 = convert64ToFour16s(piccoloroundpermutation.round_permutation(convertFour16sTo64(x16)))
+    print('X DIVIDED', x, x_hex)
 
-    x16[1] = x16[1] ^ piccoloffunction.ffunction(x16[0]) ^ rk[(2 * r) - 2]
-    x16[3] = x16[3] ^ piccoloffunction.ffunction(x16[2]) ^ rk[(2 * r) - 1]
-    x16[0] = x16[0] ^ wk[2]
-    x16[2] = x16[2] ^ wk[3]
-    out=convertFour16sTo64(x16)
-    return out
-
+    wk_b = []
+    for w in wk:
+        wk_b.append(bin(int(w, 16))[2:].zfill(16))
+    # print(wk, wk_b)
 
 
+    x[0] = xor_bin(x[0], wk_b[0])
+    x[2] = xor_bin(x[2], wk_b[1])
+    print('TEST :: ', x)
 
-def convertStringToHex(X):
-    return hex(int(X,16))
-def convertStringToInt(X):
-    return int(X,16)
-# Pass 64 bit data and returns 16 bit array of length of 4
-def convert64ToFour16s(X):
-    
-    x16 = []
-    for i in range(4):
-        x16.append((X >> (16 * (3 - i))) & 0xffff)
-    return x16
-    
+    # f = piccoloffunction.ffunction(x[0])
 
-# Pass 16 bit array of length 4 and returns 64 bit data
-def convertFour16sTo64(x16):
-    X = 0
-    for i in range(4):
-        X = X | (x16[i] << (16 * (3 - i)))
-    return X
+    for i in range(0, r-2):
+
+        f1 = piccoloffunction.ffunction(x[0])
+        xr1 = xor_bin(x[1], f1)
+        xr2 = xor_bin(xr1, rk[2*i])
+        x[1] = xr2
+
+        f2 = piccoloffunction.ffunction(x[2])
+        xr3 = xor_bin(x[3], f2)
+        xr4 = xor_bin(xr3, rk[2*i + 1])
+        x[3] = xr4
+
+        print(x)
+        # print(f1, rk[2*i], x[0], xr1, xr2, len(xr1), len(xr2))
+
+    # piccoloffunction.ffunction(x[0])
+    return " "
+

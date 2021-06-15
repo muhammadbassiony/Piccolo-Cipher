@@ -30,6 +30,7 @@ class Piccolo:
         for b in blocks:
             print('BLOCK ENTYERING :: ', b, len(b))
             x = piccoloencrypt.encrypt(b, self.key, self.wk, self.rk, self.bit)
+            break
 
         # for i in range(0,len(string),16):
         #     ascii.append(string[i:i+16])

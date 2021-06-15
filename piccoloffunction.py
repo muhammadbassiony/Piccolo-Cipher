@@ -79,15 +79,16 @@ def ffunction(X):
     res_int = np.array(res)
     #print(res_int)
 
-    x_mult_hex = []
-    x_mult_dec = []
+
+
+    h = []
     for c in res_int:
         a = int(c)
-        a = hex(sbox[0+int(a)])
-        x_mult_dec.append(int(a, 16))
-        x_mult_hex.append(a)
+        s = str(bin(a)[2:].zfill(4))
+        h.append(s)
 
-    print(x_mult_hex, x_mult_dec)
+    ss = ''.join([x for x in h])
+    # print('F-FNC OUT :: ', ss, len(ss))
 
 
-    return  " "
+    return  ss
