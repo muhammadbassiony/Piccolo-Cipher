@@ -1,7 +1,8 @@
-import piccolokeygen, piccoloencrypt, piccolodecrypt,piccolokeyscheduling
+import piccolokeygen, piccoloencrypt, piccolodecrypt, piccolokeyscheduling
+import binascii
 
 class Piccolo:
-    def __init__(self, key="",wk="",rk="", bit=80):
+    def __init__(self, key="", wk="", rk="", bit=80):
         if bit != 128:
             if bit != 80:
                 raise ValueError
@@ -59,8 +60,8 @@ class Piccolo:
 
 # **************************
 
-p=Piccolo()
-cipher=p.encrypt("abcdef0123456789abcdef0123456789")
-plain=p.decrypt(cipher)
-print(cipher)
-print(plain)
+p = Piccolo(bit=128)
+#cipher=p.encrypt("abcdef0123456789abcdef0123456789")
+#plain=p.decrypt(cipher)
+#print(cipher)
+# print(plain)
