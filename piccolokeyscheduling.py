@@ -90,7 +90,7 @@ def generate_round_keys(bit, key):
     k2.reverse()
     print('SUB KEYS ::: ', k2)
 
-    _constant_value_80(2)
+    _constant_value_128(2)
 
     # if bit == 80:
     #     for i in range(25):
@@ -141,7 +141,16 @@ def _constant_value_80(i):
 
 
 def _constant_value_128(i):
-        ci1 = i + 1
-        con = 0
-        con |= (((ci1 << 27) | (0 << 22) | (ci1 << 17) | (0 << 15) | (ci1 << 10) | (0 << 5) | (ci1)) ^ 0x6547a98b)
-        return con
+    cnn = "6547a98b"
+    ci1 = str(bin(i + 1)[2:].zfill(5))
+    c0 = str(bin(0)[2:].zfill(5))
+    # convert to binary string
+    c = ci1 + c0 + ci1 + "00" + ci1 + c0 + ci1
+    c_hex = hex(int(c, 2))
+
+    a = int(c_hex[2:], 16)
+    b = int(cnn, 16)
+    x = a ^ b
+    con = bin(x)[2:].zfill(32)
+    # print('HERE :: ', con, len(con))
+    return con
