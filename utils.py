@@ -16,6 +16,18 @@ def split_bits(value, n):
     return parts
 
 
+
+def concat_split_num(a):
+
+    s = ''
+    for i in a:
+        s += str(i)
+
+    s = int(s, 16)
+
+    return s
+
+
 def create_blocks(string):
     str_binary = ' '.join(format(ord(x), 'b') for x in string)
 

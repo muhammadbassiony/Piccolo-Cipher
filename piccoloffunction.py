@@ -1,7 +1,7 @@
 from pyfinite import ffield
 import galois
 import numpy as np
-from utils import split_bits
+from utils import split_bits, concat_split_num
 
 # S-Box Layer
 sbox = {
@@ -72,11 +72,8 @@ def ffunction(X):
     # print('2ND S-BOX DONE :: ', x, [hex(m) for m in x])
 
     #join the output into 1 16-bit block
-    s = ''
-    for i in x:
-        s += str(i)
+    s = concat_split_num(x)
 
-    s = int(s, 16)
     # print('JOINED F-FN OUTPUT :: ',  hex(s))
 
     return s

@@ -1,26 +1,29 @@
+
+from utils import split_bits, concat_split_num
+
 # Pass 64 bit and returns 64 bit
 def round_permutation(X):
 
+    x = split_bits(X, 8)
+    # print('SPLIT BLOCK IN R-P  :: ', len(x), [hex(m) for m in x])
+
     x8 = []
+    x8.append(x[2])
+    x8.append(x[7])
+    x8.append(x[4])
+    x8.append(x[1])
+    x8.append(x[6])
+    x8.append(x[3])
+    x8.append(x[0])
+    x8.append(x[5])
 
-    for i in range(0, 64, 8):
-        x8.append(X[i:i+8])
-        # print(i, i+8, X[i:i+8])
-
-    new_x8 = []
-    new_x8.append(x8[2])
-    new_x8.append(x8[7])
-    new_x8.append(x8[4])
-    new_x8.append(x8[1])
-    new_x8.append(x8[6])
-    new_x8.append(x8[3])
-    new_x8.append(x8[0])
-    new_x8.append(x8[5])
+    # print('RP ORDER PERMUTED :: ', len(x8), [hex(m) for m in x8])
 
     new_X = []
-    new_X.append(new_x8[0]+new_x8[1])
-    new_X.append(new_x8[2] + new_x8[3])
-    new_X.append(new_x8[4] + new_x8[5])
-    new_X.append(new_x8[6] + new_x8[7])
+    for i in range(0, len(x8), 2):
+        s = hex(x8[i])[2:] + hex(x8[i+1])[2:]
+        new_X.append(int(s, 16))
 
+
+    # print('RP OUTPUT PERMUTATED AND CONCATENATED BABY :: ', [hex(b) for b in new_X])
     return new_X

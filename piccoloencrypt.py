@@ -46,7 +46,10 @@ def encrypt(X, key, wk,rk, bit):
     # print('TEST :: ', x)
 
     f = piccoloffunction.ffunction(x[0])
-    print(f)
+    print(f, len(bin(f)[2:]))
+    d = piccoloroundpermutation.round_permutation(X)
+    print(d)
+
     r = 3
     # for i in range(0, r-2):
     #     print('OIII :: ', i)
@@ -82,7 +85,7 @@ def encrypt(X, key, wk,rk, bit):
     # x[2] = xor_bin(x[2], wk_b[3])
 
 
-    Y = ''.join([m for m in x])
+    # Y = ''.join([m for m in x])
     # print(Y, len(Y))
 
 
