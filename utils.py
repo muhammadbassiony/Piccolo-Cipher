@@ -41,3 +41,20 @@ def create_blocks_decipher(string):
         blocks.append(b)
 
     return blocks
+
+
+def bin_to_text(str):
+    # print('BIN TO STR :: ', str, len(str))
+
+    s = []
+    for x in range(0, len(str), 8):
+        # print(x, x+8, str[x:x+8])
+        b = str[x:x+7]
+        i = int(b[1:], 2)
+        c = chr(i)
+        # print(c)
+        s.append(c)
+
+    ss = ''.join(f for f in s)
+    # print()
+    return ss

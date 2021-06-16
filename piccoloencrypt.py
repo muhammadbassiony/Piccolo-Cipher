@@ -7,13 +7,19 @@ def xor_bin(x, y):
     b = int(y, 2)
     # print(a, b)
     z = bin(a ^ b)[2:].zfill(16)
-    # print(z)
+
+    asst = ''
+    for v in range(len(y)):
+        if(x[v] != y[v]):
+            asst += '1'
+        else:
+            asst += '0'
+
+    # print(z, asst, z==asst)
     return z
 
 
 def encrypt(X, key, wk,rk, bit):
-    #wk = piccolokeyscheduling.generate_white_keys(bit, key)
-    #rk = piccolokeyscheduling.generate_round_keys(bit, key)
     # print('X RECEIVED PARAM ENCRYPT ::  ', X, '\nWK :: ', len(wk), wk, '\nRK :: ', len(rk), rk)
 
     if bit == 80:
@@ -41,9 +47,9 @@ def encrypt(X, key, wk,rk, bit):
     # print('TEST :: ', x)
 
     # f = piccoloffunction.ffunction(x[0])
-
+    # r = 3
     for i in range(0, r-2):
-
+        # print('OIII')
         f1 = piccoloffunction.ffunction(x[0])
         xr1 = xor_bin(x[1], f1)
         xr2 = xor_bin(xr1, rk[2*i])
@@ -63,19 +69,18 @@ def encrypt(X, key, wk,rk, bit):
     # print('LOOP OVER :: ', x)
 
     f1 = piccoloffunction.ffunction(x[0])
-    xr1 = xor_bin(x[1], f1)
-    xr2 = xor_bin(xr1, rk[2*r - 2])
-    x[1] = xr2
+    xr5 = xor_bin(x[1], f1)
+    xr6 = xor_bin(xr5, rk[2*r - 2])
+    x[1] = xr6
 
     f2 = piccoloffunction.ffunction(x[2])
-    xr3 = xor_bin(x[3], f2)
-    xr4 = xor_bin(xr3, rk[2*r - 1])
-    x[3] = xr4
+    xr7 = xor_bin(x[3], f2)
+    xr8 = xor_bin(xr7, rk[2*r - 1])
+    x[3] = xr8
 
     x[0] = xor_bin(x[0], wk_b[2])
     x[2] = xor_bin(x[2], wk_b[3])
 
-    # print('FINAL :: ', x)
 
     Y = ''.join([m for m in x])
     # print(Y, len(Y))

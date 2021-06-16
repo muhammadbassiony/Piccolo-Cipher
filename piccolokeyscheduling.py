@@ -7,9 +7,26 @@ class InvalidValue(Exception):
         self.message = message
 
 
+def split_bits(value, n):
+    
+    mask, parts = (1 << n) - 1, []
+    # print('MASK :: ', hex(mask), bin(mask))
+    parts = []
+    while value:
+        parts.append(value & mask)
+        # print('APPENDED VAL :: ', hex(value & mask))
+        value >>= n
+        # print('NEW VAL/SHIFTED :: ', hex(value))
+
+
+    parts.reverse()
+    print('PARTS AFTER REVERSAL :: ', [hex(x) for x in parts])
+    return parts
+
+
 def generate_white_keys(bit, key):
-    # print('\nWHITE KEY GEN STARTS HERE\nPARAMS :: BIT :: KEY :: ', bit, key, '\n')
-    ikey = int(key, 16)
+    print('GEN WHITE KEYS :: PAR4AMS ::: ', bit, key)
+    ikey = int(key)
     k = []
     wk = []
     # number of subkeys to be genrated
@@ -18,25 +35,17 @@ def generate_white_keys(bit, key):
     #key as string
     skey = str(key)
 
-    # key_binary = str(bin(int(key, 16))[2:]).zfill(bit)
-    # print('KEY IN ASCII :::  ', len(key_binary), key_binary, type(key_binary))
-
+    print('ENTERING SPLITTER :: ', bit, key)
+    mm = split_bits(key, 16)
 
     k2 = []
 
-    # for i in range(sbit):
-    #     k.append((ikey >> (2 * (sbit - i - 1))) & 0x0000ffff)
-
-    #split the key into subkeys
     for i in range(len(skey), 0, -4):
         n1 = i
         n2 = i-4
         sub = skey[n2:n1]
-        # print(i, '\t', n2, n1, skey[n2:n1], len(skey[n2:n1]))
-        #print(hex(int(sub, 2)))
         k2.append(sub)
 
-    # print('AFTER K :: ', k)
     k2.reverse()
 
 
@@ -46,7 +55,6 @@ def generate_white_keys(bit, key):
         hexx = hex(hex_int)
         k.append(hexx)
 
-    # print('AFTER K2 :: ', k2, k)
 
     if bit == 80:
         wk.append(k2[0][:2] + k2[1][2:])
@@ -71,15 +79,13 @@ def generate_white_keys(bit, key):
 
 
 def generate_round_keys(bit, key):
-    # print('\ROUND KEY GEN STARTS HERE\nPARAMS :: BIT :: KEY :: ', bit, key, '\n')
+
     ikey = int(key, 16)
     skey = str(key)
     k = []
     rk = []
     sbit = int(bit / 16)
 
-    # for i in range(sbit):
-    #     k.append((ikey >> (16 * (sbit - i - 1))) & 0x0000ffff)
 
     # split the key into subkeys
     for i in range(len(skey), 0, -4):
@@ -97,6 +103,7 @@ def generate_round_keys(bit, key):
         r = 31
 
     rk = np.array(['0'*16 for _ in range(2*r + 1)])
+    cons = np.array(['0' * 16 for _ in range(2 * r + 1)])
     # print(rk.shape)
 
     if bit == 80:
@@ -106,18 +113,19 @@ def generate_round_keys(bit, key):
             #split con
             con2i_1 = con[16:32]
             con2i = con[0:16]
+            print('CON80 RK :: ', i, con, con2i, con2i_1)
             con2i_1 = hex(int(con2i_1, 2))
             con2i = hex(int(con2i, 2))
-            # print('CON80 RK :: ', i, con, con2i, con2i_1)
+            print('CON80 RK :: ', i, con, con2i, con2i_1)
 
             if i % 5 == 2 or i % 5 == 0:
                 a = int(k[2], 16)
                 b = int(con2i[2:], 16)
+                print('HEY YOU :: A::B :: ', a, b)
                 x = a ^ b
                 z = bin(x)[2:].zfill(16)
+                print('X :: Z :: ', x, z)
                 rk[2*i] = z
-                # print(con2i, type(con2i), k[2], type(k[2]), x, type(x), z, type(z), len(z))
-                # print(rk[2*i])
 
                 a = int(k[3], 16)
                 b = int(con2i_1[2:], 16)
@@ -125,46 +133,29 @@ def generate_round_keys(bit, key):
                 z = bin(x)[2:].zfill(16)
                 rk[2*i + 1] = z
 
-                # print(con2i_1, type(con2i_1), k[3], type(k[3]), x, type(x), z, type(z), len(z))
-                # print(rk[2*i + 1])
-                # rk.append(con2i ^ k[2])
-                # rk.append(con2i1 ^ k[3])
             elif i % 5 == 1 or i % 5 == 4:
                 a = int(k[0], 16)
                 b = int(con2i[2:], 16)
                 x = a ^ b
                 z = bin(x)[2:].zfill(16)
                 rk[2 * i] = z
-                # print(con2i, type(con2i), k[2], type(k[2]), x, type(x), z, type(z), len(z))
-                # print(rk[2*i])
-
                 a = int(k[1], 16)
                 b = int(con2i_1[2:], 16)
                 x = a ^ b
                 z = bin(x)[2:].zfill(16)
                 rk[2 * i + 1] = z
 
-                # print(con2i_1, type(con2i_1), k[3], type(k[3]), x, type(x), z, type(z), len(z))
-                # print(rk[2*i + 1])
-                # rk.append(con2i ^ k[0])
-                # rk.append(con2i1 ^ k[1])
             elif i % 5 == 3:
                 a = int(k[4], 16)
                 b = int(con2i[2:], 16)
                 x = a ^ b
                 z = bin(x)[2:].zfill(16)
                 rk[2 * i] = z
-                # print(con2i, type(con2i), k[2], type(k[2]), x, type(x), z, type(z), len(z))
-                # print(rk[2*i])
 
                 b = int(con2i_1[2:], 16)
                 x = a ^ b
                 z = bin(x)[2:].zfill(16)
                 rk[2 * i + 1] = z
-
-                # print(con2i_1, type(con2i_1), k[3], type(k[3]), x, type(x), z, type(z), len(z))
-                # print(rk[2*i + 1])
-                # rk.append(con2i1 ^ k[4])
 
     elif bit == 128:
         for i in range(2*r - 1):
@@ -176,8 +167,8 @@ def generate_round_keys(bit, key):
             con2i = con[0:16]
             con2i_1 = hex(int(con2i_1, 2))
             con2i = hex(int(con2i, 2))
-            # print('CON128 RK :: ', i, con, con2i, con2i_1)
-            # print('K NNOOTT UP :: ', k)
+
+
             if (i + 2) % 8 == 0:
                 tmp = k
                 k[0] = tmp[2]
@@ -187,18 +178,18 @@ def generate_round_keys(bit, key):
                 k[5] = tmp[3]
                 k[6] = tmp[4]
                 k[7] = tmp[5]
-                # print('K SWITCHED UP :: ', k)
+
 
             indx = (i + 1) % 8
-            # print(indx, k[indx], type(k[indx]), con2i, type(con2i))
+
             a = int(k[indx], 16)
             b = int(con2i[2:], 16)
-            # print(a, type(a), b, type(b))
+
             x = a ^ b
             z = bin(x)[2:].zfill(16)
-            # print('Z N X :: ', x, type(x), z, type(z), len(z))
+
             rk[i] = z
-            # rk.append(k[(i + 2) % 8] ^ _constant_value_128(i))
+
     else:
         raise InvalidValue('bit=' + str(bit), 'The value of bit can be 80 or 128')
 

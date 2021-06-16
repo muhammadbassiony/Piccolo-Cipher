@@ -49,18 +49,15 @@ class Piccolo:
         for b in blocks:
             print('ENTERING DECRYPT :: ', len(b), b)
             d = piccolodecrypt.decrypt(b, self.key,self.wk,self.rk, self.bit)
-            break
+            decipher.append(d)
 
-        # for i in range(0,len(estring),16):
-        #     hexlist.append(estring[i:i+16])
-        #
-        # for i in range(len(hexlist)):
-        #     decipher.append(piccolodecrypt.decrypt(int(hexlist[i], 16), self.key,self.wk,self.rk, self.bit))
-        #
-        # print(decipher)
-        #
-        # for i in range(len(decipher)):
-        #     string+=(format(decipher[i], 'x'))
+        print('DECIPHERED :: ', decipher)
+
+        dstr = ''.join([v for v in decipher])
+        plain = utils.bin_to_text(dstr)
+        print(estring)
+        print(dstr)
+        print(plain)
 
         return string
 
