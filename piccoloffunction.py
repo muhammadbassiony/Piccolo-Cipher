@@ -1,7 +1,7 @@
 from pyfinite import ffield
 import galois
 import numpy as np
-
+from utils import split_bits
 
 # S-Box Layer
 sbox = {
@@ -28,67 +28,47 @@ M = [[2, 3, 1, 1], [1, 2, 3, 1], [1, 1, 2, 3], [3, 1, 1, 2]]
 
 # Pass 16 bit data and returns 16 bit data
 def ffunction(X):
-    # print('FFUNCTION BRO :: PARAM :: ', X, len(X), type(X))
+    # print('FFUNCTION BRO :: PARAM :: ', hex(X))
 
-    x = []
-    x_hex = []
-    x_dec = []
-
-    for i in range(0, len(X), 4):
-        x.append(X[i:i + 4])
-        x_hex.append(hex(int(X[i:i + 4], 2)))
-        x_dec.append(int(X[i:i + 4], 2))
-
-    # print(x, len(x[0]), x_hex)
+    x = split_bits(X, 4)
+    # print('SPLIT BLOCK IN F-FN:: ', [hex(m) for m in x])
 
     #first s-box
-    x_s1 = []
-    x_s1_dec = []
-    for z in x_hex:
-        a = sbox[0+int(z, 16)]
-        x_s1.append(hex(a))
-        x_s1_dec.append(a)
+    temp = x
+    for d in range(len(x)):
+        x[d] = sbox[temp[d]]
 
-    # print(x_s1, x_s1_dec)
-
+    # print('1ST S-BOX DONE :: ', [hex(m) for m in x])
 
     #we are working in Galois Field of 2^4 as described by the paper
-    # a = 7
-    # F = ffield.FField(4)
-    # print(F.ShowPolynomial(a))
-
     #create a Galois Field object
     GF256 = galois.GF(2 ** 4)
+
     # check that the irreducable poly is the same as described in the paper
     # print(GF256.properties)
     # print(GF256.irreducible_poly)
 
     #converting our diffusion matrix to be in the field
     M_GF = GF256(M)
-    #print('MATRIX IN GF(4) ::  ', M)
+    # print('MATRIX IN GF(4) ::  ', M)
 
     #convert X into the galois field
-    x_s1_GF = GF256(x_s1_dec)
-    #print('X_s1 in GF ::  ', x_s1_GF)
+    x_GF = GF256(x)
+    # print('X in GF ::  ', x_GF)
 
     #perform the matrix multiplication
-    res = np.matmul(M_GF, x_s1_GF.T)
-    #print('RESULT OF MATRIX MULT IN GF(4) :: ', res)
+    res = np.matmul(M_GF, x_GF.T)
+    # print('RESULT OF MATRIX MULT IN GF(4) :: ', res)
 
     #convert back to a normal array
     res_int = np.array(res)
-    #print(res_int)
+    # print('RES :: ', res_int, [hex(m) for m in res_int])
 
+    # second s-box
+    temp = res_int
+    for d in range(len(x)):
+        x[d] = sbox[temp[d]]
 
+    # print('2ND S-BOX DONE :: ', x, [hex(m) for m in x])
 
-    h = []
-    for c in res_int:
-        a = int(c)
-        s = str(bin(a)[2:].zfill(4))
-        h.append(s)
-
-    ss = ''.join([x for x in h])
-    # print('F-FNC OUT :: ', ss, len(ss))
-
-
-    return  ss
+    return x

@@ -1,4 +1,21 @@
 
+
+def split_bits(value, n):
+
+    mask, parts = (1 << n) - 1, []
+    # print('MASK :: ', hex(mask), bin(mask))
+    parts = []
+    while value:
+        parts.append(value & mask)
+        # print('APPENDED VAL :: ', hex(value & mask))
+        value >>= n
+        # print('NEW VAL/SHIFTED :: ', hex(value))
+
+    parts.reverse()
+    # print('PARTS AFTER REVERSAL :: ', [hex(x) for x in parts])
+    return parts
+
+
 def create_blocks(string):
     str_binary = ' '.join(format(ord(x), 'b') for x in string)
 
@@ -18,7 +35,7 @@ def create_blocks(string):
         s = fullblock + ('0'*diff)
         blocks.append(int(s, 2))
 
-    print('BLOCKSS :: ', blocks)
+    # print('BLOCKSS :: ', blocks)
 
     return blocks
 

@@ -26,9 +26,11 @@ class Piccolo:
         blocks = utils.create_blocks(string)
 
         for b in blocks:
-
+            print('BLOCK ENTERING :: ', len(bin(b)[2:]), b)
             x = piccoloencrypt.encrypt(b, self.key, self.wk, self.rk, self.bit)
+            print('BLOCK FULLY ENCRYPTED :: ', x)
             cipher.append(x)
+            break
 
 
         estring = ''.join([c for c in cipher])

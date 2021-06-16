@@ -1,26 +1,11 @@
 import numpy as np
-
+from utils import split_bits
 
 class InvalidValue(Exception):
     def __init__(self, expression, message):
         self.expression = message
         self.message = message
 
-
-def split_bits(value, n):
-
-    mask, parts = (1 << n) - 1, []
-    # print('MASK :: ', hex(mask), bin(mask))
-    parts = []
-    while value:
-        parts.append(value & mask)
-        # print('APPENDED VAL :: ', hex(value & mask))
-        value >>= n
-        # print('NEW VAL/SHIFTED :: ', hex(value))
-
-    parts.reverse()
-    # print('PARTS AFTER REVERSAL :: ', [hex(x) for x in parts])
-    return parts
 
 
 def generate_white_keys(bit, key):
