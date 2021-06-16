@@ -71,4 +71,13 @@ def ffunction(X):
 
     # print('2ND S-BOX DONE :: ', x, [hex(m) for m in x])
 
-    return x
+    #join the output into 1 16-bit block
+    s = ''
+    for i in x:
+        s += str(i)
+
+    s = int(s, 16)
+    # print('JOINED F-FN OUTPUT :: ',  hex(s))
+
+    return s
+
