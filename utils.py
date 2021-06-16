@@ -1,33 +1,24 @@
 
 def create_blocks(string):
     str_binary = ' '.join(format(ord(x), 'b') for x in string)
-    fullblock = ''
 
-    for x in str_binary:
-        if x != ' ':
-            fullblock += x
-
-    fullblock = str(fullblock)
-
+    fullblock = str_binary.replace(" ", "")
     blocks = []
 
-    #create blocks and add padding
-    for x in fullblock:
-        if(fullblock == ' '):
-            break
-        if(len(fullblock) < 64):
-            b = fullblock
-            l = len(fullblock)
-            n = '0' * (64 - l)
-            new_block = b + n
-            fullblock = ' '
-        else:
-            new_block = fullblock[0:64]
-            fullblock = fullblock[64:]
+    # create blocks
+    while len(fullblock) >= 64:
+        l = len(fullblock)
+        sub = fullblock[l-64:l]
+        fullblock = fullblock[:l-64]
+        blocks.append(int(sub, 2))
 
-        blocks.append(new_block)
-        # print('BLOCK CUT ::  ', fullblock)
+    # add padding to the last block
+    if len(fullblock) != 0:
+        diff = 64 - len(fullblock)
+        s = fullblock + ('0'*diff)
+        blocks.append(int(s, 2))
 
+    print('BLOCKSS :: ', blocks)
 
     return blocks
 

@@ -20,7 +20,7 @@ def xor_bin(x, y):
 
 
 def encrypt(X, key, wk,rk, bit):
-    # print('X RECEIVED PARAM ENCRYPT ::  ', X, '\nWK :: ', len(wk), wk, '\nRK :: ', len(rk), rk)
+    print('X RECEIVED PARAM ENCRYPT ::  ', X, '\nWK :: ', len(wk),  '\nRK :: ', len(rk))
 
     if bit == 80:
         r = 25
