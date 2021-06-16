@@ -69,111 +69,77 @@ def generate_round_keys(bit, key):
     elif bit == 128:
         r = 31
 
-    rk = np.array(['0'*16 for _ in range(2*r + 1)])
-    cons = np.array(['0' * 16 for _ in range(2 * r + 1)])
-    # print(rk.shape)
+    rk = np.ones((2*r + 1), dtype=int)
+    cons = np.ones((2*r + 1), dtype=int)
+    print(rk.shape, cons.shape, type(cons), print(cons[30]))
 
-    cnn = 0x0f1e2d3c
-    i = 5
-    ci_1 = (i+1)
-    c0 = 0
-    mask = (1<<16) - 1
-    cc = (ci_1 << 27) | (0 << 22) | (ci_1 << 17) | (0 << 15) | (ci_1 << 10) | (0 << 5) | (ci_1)
-    # mask &= cc
-    # ()
-    left = cc >> 16
-    right = cc & 0xffff
-    a = 0b11<<14
-    print('TEST :: ', bin(cc), len(bin(cc)[2:]), bin(left), len(bin(left)[2:]), bin(right), len(bin(right)[2:]))
-    l, r = get_contsant_values(i, bit)
-    print('FN OUT :: ', hex(l), hex(r))
 
-    # if bit == 80:
-    #     for i in range(r-1):
-    #         #generate constant
-    #         con = _constant_value_80(i)
-    #         #split con
-    #         con2i_1 = con[16:32]
-    #         con2i = con[0:16]
-    #         print('CON80 RK :: ', i, con, con2i, con2i_1)
-    #         con2i_1 = hex(int(con2i_1, 2))
-    #         con2i = hex(int(con2i, 2))
-    #         print('CON80 RK :: ', i, con, con2i, con2i_1)
-    #
-    #         if i % 5 == 2 or i % 5 == 0:
-    #             a = int(k[2], 16)
-    #             b = int(con2i[2:], 16)
-    #             print('HEY YOU :: A::B :: ', a, b)
-    #             x = a ^ b
-    #             z = bin(x)[2:].zfill(16)
-    #             print('X :: Z :: ', x, z)
-    #             rk[2*i] = z
-    #
-    #             a = int(k[3], 16)
-    #             b = int(con2i_1[2:], 16)
-    #             x = a ^ b
-    #             z = bin(x)[2:].zfill(16)
-    #             rk[2*i + 1] = z
-    #
-    #         elif i % 5 == 1 or i % 5 == 4:
-    #             a = int(k[0], 16)
-    #             b = int(con2i[2:], 16)
-    #             x = a ^ b
-    #             z = bin(x)[2:].zfill(16)
-    #             rk[2 * i] = z
-    #             a = int(k[1], 16)
-    #             b = int(con2i_1[2:], 16)
-    #             x = a ^ b
-    #             z = bin(x)[2:].zfill(16)
-    #             rk[2 * i + 1] = z
-    #
-    #         elif i % 5 == 3:
-    #             a = int(k[4], 16)
-    #             b = int(con2i[2:], 16)
-    #             x = a ^ b
-    #             z = bin(x)[2:].zfill(16)
-    #             rk[2 * i] = z
-    #
-    #             b = int(con2i_1[2:], 16)
-    #             x = a ^ b
-    #             z = bin(x)[2:].zfill(16)
-    #             rk[2 * i + 1] = z
-    #
-    # elif bit == 128:
-    #     for i in range(2*r - 1):
-    #
-    #         # generate constant
-    #         con = _constant_value_128(i)
-    #         # split con
-    #         con2i_1 = con[16:32]
-    #         con2i = con[0:16]
-    #         con2i_1 = hex(int(con2i_1, 2))
-    #         con2i = hex(int(con2i, 2))
-    #
-    #
-    #         if (i + 2) % 8 == 0:
-    #             tmp = k
-    #             k[0] = tmp[2]
-    #             k[2] = tmp[6]
-    #             k[3] = tmp[7]
-    #             k[4] = tmp[0]
-    #             k[5] = tmp[3]
-    #             k[6] = tmp[4]
-    #             k[7] = tmp[5]
-    #
-    #
-    #         indx = (i + 1) % 8
-    #
-    #         a = int(k[indx], 16)
-    #         b = int(con2i[2:], 16)
-    #
-    #         x = a ^ b
-    #         z = bin(x)[2:].zfill(16)
-    #
-    #         rk[i] = z
-    #
-    # else:
-    #     raise InvalidValue('bit=' + str(bit), 'The value of bit can be 80 or 128')
+    if bit == 80:
+        for i in range(r-1):
+            #generate constant
+            l, r = get_contsant_values(i, bit)
+            cons[2*i] = l
+            cons[2*i + 1] = r
+            # print('CON80 RK :: ', i, hex(l), hex(r), hex(cons[2*i]), hex(cons[2*i + 1]))
+
+            if i % 5 == 2 or i % 5 == 0:
+                z = cons[2*i] ^ k[2]
+                rk[2*i] = z
+
+                z = cons[2*i + 1] ^ k[3]
+                rk[2*i + 1] = z
+
+            elif i % 5 == 1 or i % 5 == 4:
+                z = cons[2 * i] ^ k[0]
+                rk[2 * i] = z
+
+                z = cons[2 * i + 1] ^ k[1]
+                rk[2 * i + 1] = z
+
+            elif i % 5 == 3:
+                z = cons[2 * i] ^ k[4]
+                rk[2 * i] = z
+
+                z = cons[2 * i + 1] ^ k[4]
+                rk[2 * i + 1] = z
+
+        print('DONE 80 RK GEN :: ')
+
+    elif bit == 128:
+        for i in range(2*r - 1):
+
+            # generate constant
+            con = _constant_value_128(i)
+            # split con
+            con2i_1 = con[16:32]
+            con2i = con[0:16]
+            con2i_1 = hex(int(con2i_1, 2))
+            con2i = hex(int(con2i, 2))
+
+
+            if (i + 2) % 8 == 0:
+                tmp = k
+                k[0] = tmp[2]
+                k[2] = tmp[6]
+                k[3] = tmp[7]
+                k[4] = tmp[0]
+                k[5] = tmp[3]
+                k[6] = tmp[4]
+                k[7] = tmp[5]
+
+
+            indx = (i + 1) % 8
+
+            a = int(k[indx], 16)
+            b = int(con2i[2:], 16)
+
+            x = a ^ b
+            z = bin(x)[2:].zfill(16)
+
+            rk[i] = z
+
+    else:
+        raise InvalidValue('bit=' + str(bit), 'The value of bit can be 80 or 128')
 
     # print('ROUND KEYS GENNED :: ', rk)
     return rk
