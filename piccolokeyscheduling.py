@@ -8,7 +8,7 @@ class InvalidValue(Exception):
 
 
 def split_bits(value, n):
-    
+
     mask, parts = (1 << n) - 1, []
     # print('MASK :: ', hex(mask), bin(mask))
     parts = []
@@ -18,9 +18,8 @@ def split_bits(value, n):
         value >>= n
         # print('NEW VAL/SHIFTED :: ', hex(value))
 
-
     parts.reverse()
-    print('PARTS AFTER REVERSAL :: ', [hex(x) for x in parts])
+    # print('PARTS AFTER REVERSAL :: ', [hex(x) for x in parts])
     return parts
 
 
@@ -29,50 +28,26 @@ def generate_white_keys(bit, key):
     ikey = int(key)
     k = []
     wk = []
-    # number of subkeys to be genrated
-    sbit = int(bit / 16)
 
-    #key as string
-    skey = str(key)
-
-    print('ENTERING SPLITTER :: ', bit, key)
-    mm = split_bits(key, 16)
-
-    k2 = []
-
-    for i in range(len(skey), 0, -4):
-        n1 = i
-        n2 = i-4
-        sub = skey[n2:n1]
-        k2.append(sub)
-
-    k2.reverse()
-
-
-    #convert strings to hex
-    for i in k2:
-        hex_int = int(i, 16)
-        hexx = hex(hex_int)
-        k.append(hexx)
+    # print('ENTERING SPLITTER :: ', bit, key)
+    k = split_bits(key, 16)
+    # print('KEY SPLIT ::: ', [hex(x) for x in k])
 
 
     if bit == 80:
-        wk.append(k2[0][:2] + k2[1][2:])
-        wk.append(k2[1][:2] + k2[0][2:])
-        wk.append(k2[4][:2] + k2[3][2:])
-        wk.append(k2[3][:2] + k2[4][2:])
-
+        wk.append((k[0] & 0xff00) | (k[1] & 0x00ff))
+        wk.append((k[1] & 0xff00) | (k[0] & 0x00ff))
+        wk.append((k[4] & 0xff00) | (k[3] & 0x00ff))
+        wk.append((k[3] & 0xff00) | (k[4] & 0x00ff))
     elif bit == 128:
-        wk.append(k2[0][:2] + k2[1][2:])
-        wk.append(k2[1][:2] + k2[0][2:])
-        wk.append(k2[4][:2] + k2[7][2:])
-        wk.append(k2[7][:2] + k2[4][2:])
-
+        wk.append((k[0] & 0xff00) | (k[1] & 0x00ff))
+        wk.append((k[1] & 0xff00) | (k[0] & 0x00ff))
+        wk.append((k[4] & 0xff00) | (k[7] & 0x00ff))
+        wk.append((k[7] & 0xff00) | (k[4] & 0x00ff))
     else:
         raise InvalidValue('bit=' + str(bit), 'The value of bit can be 80 or 128')
 
-    # print('WHITE KEYS GENNED :: ', wk)
-
+    print('WHITE KEYS GENNED :: ', hex(key) , [hex(x) for x in wk])
     return wk
 
 
