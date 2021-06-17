@@ -28,7 +28,7 @@ M = [[2, 3, 1, 1], [1, 2, 3, 1], [1, 1, 2, 3], [3, 1, 1, 2]]
 
 # Pass 16 bit data and returns 16 bit data
 def ffunction(X):
-    # print('FFUNCTION BRO :: PARAM :: ', hex(X))
+    # print('\nFFUNCTION BRO :: PARAM :: ', hex(X))
 
     x = split_bits(X, 4)
     # print('SPLIT BLOCK IN F-FN:: ', [hex(m) for m in x])

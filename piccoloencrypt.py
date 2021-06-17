@@ -1,26 +1,9 @@
 import piccolokeyscheduling, piccoloffunction, piccoloroundpermutation
 from utils import split_bits
 
-def xor_bin(x, y):
-    # print('here', x, y)
-    a = int(x, 2)
-    b = int(y, 2)
-    # print(a, b)
-    z = bin(a ^ b)[2:].zfill(16)
-
-    asst = ''
-    for v in range(len(y)):
-        if(x[v] != y[v]):
-            asst += '1'
-        else:
-            asst += '0'
-
-    # print(z, asst, z==asst)
-    return z
-
 
 def encrypt(X, key, wk,rk, bit):
-    print('X RECEIVED PARAM ENCRYPT ::  ', X, 'WK :: ', len(wk),  'RK :: ', len(rk))
+    # print('X RECEIVED PARAM ENCRYPT ::  ', X, 'WK :: ', len(wk),  'RK :: ', len(rk))
 
     if bit == 80:
         r = 25
@@ -28,66 +11,76 @@ def encrypt(X, key, wk,rk, bit):
         r = 31
 
     x = split_bits(X, 16)
-    print('SPLIT BLOCK :: ', [hex(m) for m in x])
+    # print('SPLIT BLOCK :: ', [hex(m) for m in x])
 
     x[0] = x[0] ^ wk[0]
     x[2] = x[2] ^ wk[1]
+    # print('FIRST  :: ', [hex(m) for m in x])
 
-    print('FIRST  :: ', [hex(m) for m in x])
+    # f = piccoloffunction.ffunction(x[0])
+    # print(f, hex(f),len(bin(f)[2:]))
+    # f = piccoloffunction.ffunction(f)
+    # print(f, hex(f), len(bin(f)[2:]))
+    # d = piccoloroundpermutation.round_permutation(X)
+    # print(d, [hex(x) for x in d])
 
-    # wk_b = []
-    # for w in wk:
-    #     wk_b.append(bin(int(w, 16))[2:].zfill(16))
-    # # print(wk, wk_b)
-    #
-    #
-    # x[0] = xor_bin(x[0], wk_b[0])
-    # x[2] = xor_bin(x[2], wk_b[1])
-    # print('TEST :: ', x)
+    # F-fn takes a 16-bit block and returns a 16-bit block
+    # RP fn takes 1 64-bit block and returns it as 4 16-bit blocks
 
-    f = piccoloffunction.ffunction(x[0])
-    print(f, len(bin(f)[2:]))
-    d = piccoloroundpermutation.round_permutation(X)
-    print(d)
+    # r = 4
+    for i in range(0, r-2):
+        # print('\nOIII NEW ROUND HERE  :: ', i)
 
-    r = 3
-    # for i in range(0, r-2):
-    #     print('OIII :: ', i)
-    #     f1 = piccoloffunction.ffunction(x[0])
-    #     xr1 = xor_bin(x[1], f1)
-    #     xr2 = xor_bin(xr1, rk[2*i])
-    #     x[1] = xr2
-    #
-    #     f2 = piccoloffunction.ffunction(x[2])
-    #     xr3 = xor_bin(x[3], f2)
-    #     xr4 = xor_bin(xr3, rk[2*i + 1])
-    #     x[3] = xr4
-    #
-    #     xp = ''.join([j for j in x])
-    #     # print(x, xp, len(xp))
-    #
-    #     x = piccoloroundpermutation.round_permutation(xp)
+        f1 = piccoloffunction.ffunction(x[0])
+        xr1 = x[1] ^ f1 ^ rk[2*i]
+        x[1] = xr1
+        # print('1ST R  :: ', i, hex(x[0]), hex(f1), type(f1), hex(rk[2*i]), hex(x[1]), hex(xr1))
+        # xr1 = xor_bin(x[1], f1)
+        # xr2 = xor_bin(xr1, rk[2*i])
+        # x[1] = xr2
+        #
+        f2 = piccoloffunction.ffunction(x[2])
+        xr2 = x[3] ^ f2 ^ rk[2 * i + 1]
+        x[3] = xr2
+        # print('2ND R  :: ', i, hex(x[3]))
+        # xr3 = xor_bin(x[3], f2)
+        # xr4 = xor_bin(xr3, rk[2*i + 1])
+        # x[3] = xr4
+        # print('BEFORE RP :: ', [hex(m) for m in x])
 
-    #loop done
-    # print('LOOP OVER :: ', x)
-    #
-    # f1 = piccoloffunction.ffunction(x[0])
-    # xr5 = xor_bin(x[1], f1)
-    # xr6 = xor_bin(xr5, rk[2*r - 2])
-    # x[1] = xr6
-    #
-    # f2 = piccoloffunction.ffunction(x[2])
-    # xr7 = xor_bin(x[3], f2)
-    # xr8 = xor_bin(xr7, rk[2*r - 1])
-    # x[3] = xr8
-    #
-    # x[0] = xor_bin(x[0], wk_b[2])
-    # x[2] = xor_bin(x[2], wk_b[3])
+        xp = ''.join([ "{0:04x}".format(j) for j in x])
+        xp = int(xp, 16)
+        print('XPXPXPXP ::: ', i, [hex(j) for j in x], hex(xp), type(xp))
 
+        x = piccoloroundpermutation.round_permutation(xp)
+        # loop done
+        print('LOOP END :: ', i, [hex(m) for m in x])
 
-    # Y = ''.join([m for m in x])
-    # print(Y, len(Y))
+    # print('\nLOOP FINI :: ', [hex(m) for m in x])
+
+    f1 = piccoloffunction.ffunction(x[0])
+    xr1 = x[1] ^ f1 ^ rk[2 * r - 2]
+    x[1] = xr1
+
+    f2 = piccoloffunction.ffunction(x[2])
+    xr2 = x[3] ^ f2 ^ rk[2 * r - 1]
+    x[3] = xr2
+
+    # print('THIRD PART DONE :: ', [hex(m) for m in x])
+
+    x[0] = x[0] ^ wk[2]
+    x[2] = x[2] ^ wk[3]
+
+    # print('FOURTH PART DONE :: ', [hex(m) for m in x])
 
 
-    return "YYYYYYYY"
+    e = ''
+    for i in range(0, len(x)):
+        e = ''.join([e, "{0:04x}".format(x[i])])
+
+    Y = int(e, 16)
+    # print('Y done :: ', hex(Y), Y)
+
+
+    return Y
 

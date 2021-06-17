@@ -26,14 +26,15 @@ class Piccolo:
         blocks = utils.create_blocks(string)
 
         for b in blocks:
-            print('BLOCK ENTERING :: ', len(bin(b)[2:]), b)
+            # print('BLOCK ENTERING :: ', len(bin(b)[2:]), b)
             x = piccoloencrypt.encrypt(b, self.key, self.wk, self.rk, self.bit)
-            print('BLOCK FULLY ENCRYPTED :: ', x)
+            # print('BLOCK FULLY ENCRYPTED :: ', hex(x), len(bin(x)[2:]))
             cipher.append(x)
-            break
+            # break
 
+        print('CIPHER TEXT :: ', [(hex(y),len(bin(y)[2:])) for y in cipher])
 
-        estring = ''.join([c for c in cipher])
+        # estring = ''.join([c for c in cipher])
 
         return estring
 

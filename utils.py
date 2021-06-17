@@ -21,7 +21,7 @@ def concat_split_num(a):
 
     s = ''
     for i in a:
-        s += str(i)
+        s += hex(i)[2:]
 
     s = int(s, 16)
 

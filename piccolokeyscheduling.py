@@ -32,7 +32,7 @@ def generate_white_keys(bit, key):
     else:
         raise InvalidValue('bit=' + str(bit), 'The value of bit can be 80 or 128')
 
-    print('WHITE KEYS GENNED :: ', hex(key) , [hex(x) for x in wk])
+    # print('WHITE KEYS GENNED :: ', hex(key) , [hex(x) for x in wk])
     return wk
 
 
@@ -131,7 +131,7 @@ def generate_round_keys(bit, key):
     else:
         raise InvalidValue('bit=' + str(bit), 'The value of bit can be 80 or 128')
 
-    print('ROUND KEYS GENNED :: ', [hex(x) for x in rk])
+    # print('ROUND KEYS GENNED :: ', [hex(x) for x in rk])
     return rk
 
 

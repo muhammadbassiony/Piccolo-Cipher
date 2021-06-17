@@ -3,6 +3,7 @@ from utils import split_bits, concat_split_num
 
 # Pass 64 bit and returns 64 bit
 def round_permutation(X):
+    # print('\nRP PARAMS :: ', hex(X))
 
     x = split_bits(X, 8)
     # print('SPLIT BLOCK IN R-P  :: ', len(x), [hex(m) for m in x])
@@ -21,7 +22,10 @@ def round_permutation(X):
 
     new_X = []
     for i in range(0, len(x8), 2):
+        # print('RP ERROR HERE :: ', "{0:02x}".format(x8[i]), "{0:02x}".format(x8[i+1]))
         s = hex(x8[i])[2:] + hex(x8[i+1])[2:]
+        s = "{0:02x}".format(x8[i]) + "{0:02x}".format(x8[i+1])
+        # print('SSS HERE :: ', s)
         new_X.append(int(s, 16))
 
 
