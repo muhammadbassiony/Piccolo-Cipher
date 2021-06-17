@@ -54,17 +54,17 @@ def ffunction(X):
     print('SPLIT BLOCK IN F-FN:: ', len(x), [m for m in x], [hex(m) for m in x])
 
     while(len(x) <  4):
-        print('HERE PREPENDING X :: ', len(x), [m for m in x], [hex(m) for m in x])
+        print('@'*10, 'F-FN HERE PREPENDING X :: ', len(x), [m for m in x], [hex(m) for m in x])
         x.insert(0, 0)
 
-    print('F-FN PREPENDING BEFORE 1ST SBLOCK:: ', len(x), [m for m in x], [hex(m) for m in x])
+    print('F-FN BEFORE 1ST SBLOCK:: ', len(x), [m for m in x], [hex(m) for m in x])
 
     #first s-box
     temp = x
     for d in range(len(x)):
         x[d] = sbox[temp[d]]
 
-    # print('1ST S-BOX DONE :: ', [hex(m) for m in x])
+    print('1ST S-BOX DONE :: ', [hex(m) for m in x])
 
     #we are working in Galois Field of 2^4 as described by the paper
     #create a Galois Field object
@@ -88,20 +88,21 @@ def ffunction(X):
 
     #convert back to a normal array
     res_int = np.array(res)
-    # print('RES :: ', res_int, [hex(m) for m in res_int])
+    print('RES :: ', res_int, [hex(m) for m in res_int])
 
     # second s-box
     temp = res_int
     for d in range(len(x)):
         x[d] = sbox[temp[d]]
 
-    # print('2ND S-BOX DONE :: ', x, [hex(m) for m in x])
+    print('2ND S-BOX DONE :: ', x, [hex(m) for m in x])
 
     #join the output into 1 16-bit block
     # s = concat_split_num(x)
 
     new_x = 0
     for i in range(4):
+        # print('AAAA :: ', 4 * (3 - i), hex((x[i] << (4 * (3 - i)))))
         new_x = new_x | (x[i] << (4 * (3 - i)))
 
     print('JOINED F-FN OUTPUT :: ', hex(new_x))

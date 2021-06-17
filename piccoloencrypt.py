@@ -3,7 +3,7 @@ from utils import split_bits
 
 
 def encrypt(X, key, wk,rk, bit):
-    print('X RECEIVED PARAM ENCRYPT ::  ', hex(X), 'WK :: ', len(wk),  'RK :: ', len(rk))
+    print('X RECEIVED PARAM ENCRYPT ::  ', hex(X), len(bin(X)[2:]), 'WK :: ', len(wk),  'RK :: ', len(rk))
 
     if bit == 80:
         r = 25
@@ -34,7 +34,7 @@ def encrypt(X, key, wk,rk, bit):
         f1 = piccoloffunction.ffunction(x[0])
         xr1 = x[1] ^ f1 ^ rk[2*i]
         x[1] = xr1
-        print('1ST R  :: ', i, hex(x[0]), hex(f1), type(f1), hex(rk[2*i]), hex(x[1]), hex(xr1))
+        print('1ST R  X1 :: ', i, [hex(m) for m in x], '\tf1 ::', hex(f1), len(bin(f1)[2:]))
         # xr1 = xor_bin(x[1], f1)
         # xr2 = xor_bin(xr1, rk[2*i])
         # x[1] = xr2
@@ -42,7 +42,7 @@ def encrypt(X, key, wk,rk, bit):
         f2 = piccoloffunction.ffunction(x[2])
         xr2 = x[3] ^ f2 ^ rk[2 * i + 1]
         x[3] = xr2
-        print('2ND R  :: ', i, hex(x[3]))
+        print('2ND R  X3 :: ', i, [hex(m) for m in x], '\tf2 ::', hex(f2), len(bin(f2)[2:]))
         # xr3 = xor_bin(x[3], f2)
         # xr4 = xor_bin(xr3, rk[2*i + 1])
         # x[3] = xr4
@@ -82,7 +82,7 @@ def encrypt(X, key, wk,rk, bit):
         e = ''.join([e, "{0:04x}".format(x[i])])
 
     Y = int(e, 16)
-    # print('Y done :: ', hex(Y), Y)
+    print('Y done :: ', hex(Y), Y)
 
 
     return Y
