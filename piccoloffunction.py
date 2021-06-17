@@ -51,20 +51,33 @@ def ffunction(X):
     print('FFUNCTION BRO :: PARAM :: ', hex(X))
 
     x = split_bits(X, 4)
-    print('SPLIT BLOCK IN F-FN:: ', len(x), [m for m in x], [hex(m) for m in x])
+    # print('SPLIT BLOCK IN F-FN:: ', len(x), [m for m in x], [hex(m) for m in x])
 
     while(len(x) <  4):
         print('@'*10, 'F-FN HERE PREPENDING X :: ', len(x), [m for m in x], [hex(m) for m in x])
         x.insert(0, 0)
 
-    print('F-FN BEFORE 1ST SBLOCK:: ', len(x), [m for m in x], [hex(m) for m in x])
+    # print('F-FN BEFORE 1ST SBLOCK:: ', len(x), [m for m in x], [hex(m) for m in x])
 
     #first s-box
     temp = x
     for d in range(len(x)):
         x[d] = sbox[temp[d]]
 
-    print('1ST S-BOX DONE :: ', [hex(m) for m in x])
+    # print('1ST S-BOX DONE :: ', [hex(m) for m in x])
+
+
+    # F = ffield.FField(16)
+    # print('TRYING OTHER LIB :: ', F)
+    #
+    # x4d = []
+    # for i in range(4):
+    #     for k in range(4):
+    #         sum = 0
+    #         sum += F.Multiply(M[i][k], x[k])
+    #     x4d.append(sum)
+    #
+    # print('OTHER LIB RES :: ', x4d)
 
     #we are working in Galois Field of 2^4 as described by the paper
     #create a Galois Field object
@@ -88,14 +101,14 @@ def ffunction(X):
 
     #convert back to a normal array
     res_int = np.array(res)
-    print('RES :: ', res_int, [hex(m) for m in res_int])
+    # print('RES :: ', res_int, [hex(m) for m in res_int])
 
     # second s-box
     temp = res_int
     for d in range(len(x)):
         x[d] = sbox[temp[d]]
 
-    print('2ND S-BOX DONE :: ', x, [hex(m) for m in x])
+    # print('2ND S-BOX DONE :: ', x, [hex(m) for m in x])
 
     #join the output into 1 16-bit block
     # s = concat_split_num(x)
@@ -105,7 +118,7 @@ def ffunction(X):
         # print('AAAA :: ', 4 * (3 - i), hex((x[i] << (4 * (3 - i)))))
         new_x = new_x | (x[i] << (4 * (3 - i)))
 
-    print('JOINED F-FN OUTPUT :: ', hex(new_x))
+    print('JOINED F-FN OUTPUT :: ', hex(new_x), len(bin(new_x)[2:]))
     print('*' * 20)
     return new_x
 
