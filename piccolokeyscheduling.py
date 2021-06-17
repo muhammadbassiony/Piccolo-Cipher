@@ -6,6 +6,24 @@ class InvalidValue(Exception):
         self.expression = message
         self.message = message
 
+# Pre calculated constants
+cons80 = [
+  0x071c293d, 0x1f1a253e, 0x1718213f, 0x2f163d38, 0x27143939,
+  0x3f12353a, 0x3710313b, 0x4f0e0d34, 0x470c0935, 0x5f0a0536,
+  0x57080137, 0x6f061d30, 0x67041931, 0x7f021532, 0x77001133,
+  0x8f3e6d2c, 0x873c692d, 0x9f3a652e, 0x9738612f, 0xaf367d28,
+  0xa7347929, 0xbf32752a, 0xb730712b, 0xcf2e4d24, 0xc72c4925
+]
+
+cons128 = [
+0x6d45ad8a, 0x7543a189, 0x7d41a588, 0x454fb98f, 0x4d4dbd8e,
+  0x554bb18d, 0x5d49b58c, 0x25578983, 0x2d558d82, 0x35538181,
+  0x3d518580, 0x055f9987, 0x0d5d9d86, 0x155b9185, 0x1d599584,
+  0xe567e99b, 0xed65ed9a, 0xf563e199, 0xfd61e598, 0xc56ff99f,
+  0xcd6dfd9e, 0xd56bf19d, 0xdd69f59c, 0xa577c993, 0xad75cd92,
+  0xb573c191, 0xbd71c590, 0x857fd997, 0x8d7ddd96, 0x957bd195,
+  0x9d79d594
+]
 
 
 def generate_white_keys(bit, key):
@@ -32,7 +50,7 @@ def generate_white_keys(bit, key):
     else:
         raise InvalidValue('bit=' + str(bit), 'The value of bit can be 80 or 128')
 
-    # print('WHITE KEYS GENNED :: ', hex(key) , [hex(x) for x in wk])
+    print('WHITE KEYS GENNED :: ', hex(key) , [hex(x) for x in wk])
     return wk
 
 
@@ -65,7 +83,8 @@ def generate_round_keys(bit, key):
 
         rk = np.zeros((2 * r), dtype=int)
         cons = np.zeros((2 * r), dtype=int)
-        # print('RK80 SHAPES :: ',rk.shape, cons.shape, type(cons), (2 * r + 1), 2 * r - 1)
+        # cons = cons80
+        # print('RK80 SHAPES :: ',rk.shape, len(cons), hex(cons[5]), type(cons))
 
         for i in range(r-1):
             #generate constant
@@ -76,6 +95,7 @@ def generate_round_keys(bit, key):
 
             if i % 5 == 2 or i % 5 == 0:
                 z = cons[2*i] ^ k[2]
+                # print('ZZ 1 :: ', hex(cons[2 * i]), hex(cons80[i]), hex(k[2]), hex(z))
                 rk[2*i] = z
 
                 z = cons[(2*i)+1] ^ k[3]
@@ -100,15 +120,17 @@ def generate_round_keys(bit, key):
     elif bit == 128:
 
         rk = np.zeros((2 * r + 1), dtype=int)
-        cons = np.zeros(2 * (2 * r + 1), dtype=int)
-        # print('RK128 SHAPES :: ', rk.shape, cons.shape, type(cons), (2 * r + 1), 2 * r - 1)
+        # cons = np.zeros(2 * (2 * r + 1), dtype=int)
+        cons = cons128
+        print('RK128 SHAPES :: ', rk.shape, len(cons), type(cons))
+
 
         for i in range((2*r) - 1):
-            # generate constant
-            left, right = get_contsant_values(i, bit)
-            cons[2 * i] = left
-            cons[(2*i)+1] = right
-            # print('\nCON128 RK :: ', i, hex(left), hex(right), hex(cons[2*i]), hex(cons[(2*i)+1]))
+            # # generate constant
+            # left, right = get_contsant_values(i, bit)
+            # cons[2 * i] = left
+            # cons[(2*i)+1] = right
+            # # print('\nCON128 RK :: ', i, hex(left), hex(right), hex(cons[2*i]), hex(cons[(2*i)+1]))
 
 
             # print('KEY BEFORE :: ', [hex(x) for x in k])
@@ -131,7 +153,7 @@ def generate_round_keys(bit, key):
     else:
         raise InvalidValue('bit=' + str(bit), 'The value of bit can be 80 or 128')
 
-    # print('ROUND KEYS GENNED :: ', [hex(x) for x in rk])
+    print('ROUND KEYS GENNED :: ', rk.shape, [hex(x) for x in rk])
     return rk
 
 

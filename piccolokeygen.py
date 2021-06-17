@@ -1,5 +1,7 @@
 import random
 
+# THIS FN IS WRONG -- DO NOT USE
+
 def piccolokeygen(bit):
     key = ""
 

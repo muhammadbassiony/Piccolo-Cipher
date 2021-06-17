@@ -31,16 +31,22 @@ def concat_split_num(a):
 
 def create_blocks(string):
     str_binary = ' '.join(format(ord(x), 'b') for x in string)
+    # print('STR BINARRY :: ', int(string))
 
-    fullblock = str_binary.replace(" ", "")
+    # fullblock = str_binary.replace(" ", "")
+    fullblock = "011010000110010101101100011011000110111101101101011000010111100001101001011011100110010101100001011011100110010001101101011000010111001001101011"
     blocks = []
+    # print('NEW FULLBLOCK', len(fullblock))
 
     # create blocks
     while len(fullblock) >= 64:
         l = len(fullblock)
         sub = fullblock[l-64:l]
+        # print('SUB :: ', sub, len(sub))
         fullblock = fullblock[:l-64]
         blocks.append(int(sub, 2))
+
+    # print('LAST BLOCK :: ', fullblock, len(fullblock))
 
     # add padding to the last block
     if len(fullblock) != 0:
@@ -48,7 +54,9 @@ def create_blocks(string):
         s = fullblock + ('0'*diff)
         blocks.append(int(s, 2))
 
-    # print('BLOCKSS :: ', blocks)
+    # for b in blocks:
+    #     h = bin(b)[2:]
+    #     print('BLOCK :: ', hex(b), len(h))
 
     return blocks
 

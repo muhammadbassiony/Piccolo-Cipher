@@ -47,14 +47,17 @@ M = [[2, 3, 1, 1], [1, 2, 3, 1], [1, 1, 2, 3], [3, 1, 1, 2]]
 
 # Pass 16 bit data and returns 16 bit data
 def ffunction(X):
-    # print('FFUNCTION BRO :: PARAM :: ', hex(X))
+    print('*'*20)
+    print('FFUNCTION BRO :: PARAM :: ', hex(X))
 
     x = split_bits(X, 4)
-    # print('SPLIT BLOCK IN F-FN:: ', len(x), [m for m in x], [hex(m) for m in x])
+    print('SPLIT BLOCK IN F-FN:: ', len(x), [m for m in x], [hex(m) for m in x])
+
     while(len(x) <  4):
-        # print('\n\n HERE PREPENDING X :: ', len(x), [m for m in x], [hex(m) for m in x])
+        print('HERE PREPENDING X :: ', len(x), [m for m in x], [hex(m) for m in x])
         x.insert(0, 0)
 
+    print('F-FN PREPENDING BEFORE 1ST SBLOCK:: ', len(x), [m for m in x], [hex(m) for m in x])
 
     #first s-box
     temp = x
@@ -95,9 +98,13 @@ def ffunction(X):
     # print('2ND S-BOX DONE :: ', x, [hex(m) for m in x])
 
     #join the output into 1 16-bit block
-    s = concat_split_num(x)
+    # s = concat_split_num(x)
 
-    # print('JOINED F-FN OUTPUT :: ',  hex(s))
+    new_x = 0
+    for i in range(4):
+        new_x = new_x | (x[i] << (4 * (3 - i)))
 
-    return s
+    print('JOINED F-FN OUTPUT :: ', hex(new_x))
+    print('*' * 20)
+    return new_x
 

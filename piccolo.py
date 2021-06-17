@@ -23,14 +23,17 @@ class Piccolo:
         estring = ""
 
         #create 64-bit blocks and add padding
-        blocks = utils.create_blocks(string)
+        # blocks = utils.create_blocks(string)
+        blocks = [string]
+        print('ALL BLOCKS :: ', [hex(r) for r in blocks])
+
 
         for b in blocks:
-            # print('BLOCK ENTERING :: ', len(bin(b)[2:]), b)
+            print('BLOCK ENTERING :: ', len(bin(b)[2:]), hex(b), '\n')
             x = piccoloencrypt.encrypt(b, self.key, self.wk, self.rk, self.bit)
-            # print('BLOCK FULLY ENCRYPTED :: ', hex(x), len(bin(x)[2:]))
+            print('BLOCK FULLY ENCRYPTED :: ', hex(x), len(bin(x)[2:]))
             cipher.append(x)
-            # break
+            break
 
         # print('CIPHER TEXT :: ', [(hex(y),len(bin(y)[2:])) for y in cipher])
 
@@ -61,9 +64,9 @@ class Piccolo:
             print('ENTERING DECRYPT :: ', hex(b), len(bin(b)[2:]))
             d = piccolodecrypt.decrypt(b, self.key,self.wk,self.rk, self.bit)
             decipher.append(d)
-            break
+            # break
 
-        print('DECIPHERED :: ', decipher)
+        print('DECIPHERED :: ', [hex(x) for x in decipher])
 
         # dstr = ''.join([v for v in decipher])
         # plain = utils.bin_to_text(dstr)
