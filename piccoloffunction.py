@@ -3,6 +3,25 @@ import galois
 import numpy as np
 from utils import split_bits, concat_split_num
 
+
+
+def split_bits_ffn(value, n):
+
+    mask, parts = (1 << n) - 1, []
+    # print('MASK :: ', hex(mask), bin(mask))
+    parts = []
+    while value:
+        parts.append(value & mask)
+        # print('APPENDED VAL :: ', hex(value & mask))
+        value >>= n
+        # print('NEW VAL/SHIFTED :: ', hex(value))
+
+    parts.reverse()
+    # print('PARTS AFTER REVERSAL :: ', [hex(x) for x in parts])
+    return parts
+
+
+
 # S-Box Layer
 sbox = {
     0x0: 0xe,
@@ -28,10 +47,14 @@ M = [[2, 3, 1, 1], [1, 2, 3, 1], [1, 1, 2, 3], [3, 1, 1, 2]]
 
 # Pass 16 bit data and returns 16 bit data
 def ffunction(X):
-    # print('\nFFUNCTION BRO :: PARAM :: ', hex(X))
+    # print('FFUNCTION BRO :: PARAM :: ', hex(X))
 
     x = split_bits(X, 4)
-    # print('SPLIT BLOCK IN F-FN:: ', [hex(m) for m in x])
+    # print('SPLIT BLOCK IN F-FN:: ', len(x), [m for m in x], [hex(m) for m in x])
+    while(len(x) <  4):
+        # print('\n\n HERE PREPENDING X :: ', len(x), [m for m in x], [hex(m) for m in x])
+        x.insert(0, 0)
+
 
     #first s-box
     temp = x

@@ -1,5 +1,5 @@
 import piccolokeygen, piccoloencrypt, piccolodecrypt, piccolokeyscheduling, utils
-import binascii
+from utils import split_bits
 
 class Piccolo:
     def __init__(self, key="", wk="", rk="", bit=80):
@@ -32,35 +32,44 @@ class Piccolo:
             cipher.append(x)
             # break
 
-        print('CIPHER TEXT :: ', [(hex(y),len(bin(y)[2:])) for y in cipher])
+        # print('CIPHER TEXT :: ', [(hex(y),len(bin(y)[2:])) for y in cipher])
 
-        # estring = ''.join([c for c in cipher])
+        ciphertext = ''
+        for c in cipher:
+            cb = bin((c))[2:].zfill(64)
+            ciphertext = ''.join([ciphertext, cb])
+            # print('CIPHERINIOOO :: ', c, hex(c), cb, len(cb))
 
-        return estring
+        cipher_d = int(ciphertext, 2)
+        # print('HERE :: ', ciphertext, len(ciphertext), '\n',hex(d), len(bin(d)[2:]))
+
+        return cipher_d
 
 
-    def decrypt(self, estring):
+    def decrypt(self, fullcipher):
         hexlist = []
         decipher = []
         string = ""
 
-        print('DECIPHER  1 :: ', estring, type(estring))
+        print('DECIPHER  1 :: ', hex(fullcipher), len(bin(fullcipher)[2:]))
+
         # create 64-bit blocks and add padding
-        blocks = utils.create_blocks_decipher(estring)
-        print('BLOCKS :: ', blocks)
+        blocks = split_bits(fullcipher, 64)
+        # print('RESULTING BLOCKS :: ', [hex(x) for x in blocks])
 
         for b in blocks:
-            print('ENTERING DECRYPT :: ', len(b), b)
+            print('ENTERING DECRYPT :: ', hex(b), len(bin(b)[2:]))
             d = piccolodecrypt.decrypt(b, self.key,self.wk,self.rk, self.bit)
             decipher.append(d)
+            break
 
         print('DECIPHERED :: ', decipher)
 
-        dstr = ''.join([v for v in decipher])
-        plain = utils.bin_to_text(dstr)
-        print(estring)
-        print(dstr)
-        print(plain)
+        # dstr = ''.join([v for v in decipher])
+        # plain = utils.bin_to_text(dstr)
+        # print(estring)
+        # print(dstr)
+        # print(plain)
 
         return string
 

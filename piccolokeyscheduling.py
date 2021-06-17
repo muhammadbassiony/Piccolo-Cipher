@@ -63,8 +63,8 @@ def generate_round_keys(bit, key):
 
     if bit == 80:
 
-        rk = np.zeros((2 * r ), dtype=int)
-        cons = np.zeros((2 * r ), dtype=int)
+        rk = np.zeros((2 * r), dtype=int)
+        cons = np.zeros((2 * r), dtype=int)
         # print('RK80 SHAPES :: ',rk.shape, cons.shape, type(cons), (2 * r + 1), 2 * r - 1)
 
         for i in range(r-1):

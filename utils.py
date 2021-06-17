@@ -22,6 +22,7 @@ def concat_split_num(a):
     s = ''
     for i in a:
         s += hex(i)[2:]
+        # print('UTILS ::: ', s)
 
     s = int(s, 16)
 
@@ -52,15 +53,21 @@ def create_blocks(string):
     return blocks
 
 
-def create_blocks_decipher(string):
+def create_blocks_decipher(fullcipher):
     #much simpler as its already padded from the encryption
-    blocks = []
-    for k in range(0, len(string), 64):
-        b = string[k:k+64]
-        # print(k, k+64, len(b))
-        blocks.append(b)
+    # print('CREATE DECIPHERING BLOCKS :: ', fullcipher, hex(fullcipher)[2:], len(hex(fullcipher)[2:]) / 16)
+    # num_blocks = int(len(hex(fullcipher)[2:]) / 16)
+    # print('NUM BLOCKS :: ', num_blocks)
 
-    return blocks
+    blocks = split_bits(fullcipher, 64)
+    print('RESULTING BLOCKS :: ', [hex(x) for x in blocks])
+
+    # for k in range(0, len(string), 64):
+    #     b = string[k:k+64]
+    #     # print(k, k+64, len(b))
+    #     blocks.append(b)
+    #
+    # return blocks
 
 
 def bin_to_text(str):

@@ -3,6 +3,9 @@ import numpy as np
 
 def decrypt(Y, key,wk,rk, bit):
 
+    print('DECRYPT PARAMS :: ', Y, hex(key), bit)
+    print('DECRYPT PARAMS :: WHITE KEYS GENNED :: ', len(wk), [hex(x) for x in wk])
+    print('DECRYPT PARAMS :: ROUND KEYS :: ', len(rk), [hex(x) for x in rk])
     if bit == 80:
         r = 25
     elif bit == 128:

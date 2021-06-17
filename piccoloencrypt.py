@@ -28,9 +28,11 @@ def encrypt(X, key, wk,rk, bit):
     # RP fn takes 1 64-bit block and returns it as 4 16-bit blocks
 
     # r = 4
-    for i in range(0, r-2):
+    for i in range(0, r-2, 1):
         # print('\nOIII NEW ROUND HERE  :: ', i)
 
+        # g = int("{0:04x}".format(x[0]), 16)
+        # print('GGGG :: ', g, type(g), hex(g))
         f1 = piccoloffunction.ffunction(x[0])
         xr1 = x[1] ^ f1 ^ rk[2*i]
         x[1] = xr1
@@ -48,13 +50,16 @@ def encrypt(X, key, wk,rk, bit):
         # x[3] = xr4
         # print('BEFORE RP :: ', [hex(m) for m in x])
 
-        xp = ''.join([ "{0:04x}".format(j) for j in x])
+        # xp = ''.join([ "{0:04x}".format(j) for j in x])
+        xp = ''
+        for j in range(0, len(x)):
+            xp = ''.join([xp, "{0:04x}".format(x[j])])
         xp = int(xp, 16)
-        print('XPXPXPXP ::: ', i, [hex(j) for j in x], hex(xp), type(xp))
+        # print('XPXPXPXP ::: ', i, [hex(j) for j in x], hex(xp), type(xp))
 
         x = piccoloroundpermutation.round_permutation(xp)
         # loop done
-        print('LOOP END :: ', i, [hex(m) for m in x])
+        # print('LOOP END :: ', i, [hex(m) for m in x])
 
     # print('\nLOOP FINI :: ', [hex(m) for m in x])
 
