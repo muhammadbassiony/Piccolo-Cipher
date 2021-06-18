@@ -16,7 +16,7 @@ cons80 = [
 ]
 
 cons128 = [
-0x6d45ad8a, 0x7543a189, 0x7d41a588, 0x454fb98f, 0x4d4dbd8e,
+  0x6d45ad8a, 0x7543a189, 0x7d41a588, 0x454fb98f, 0x4d4dbd8e,
   0x554bb18d, 0x5d49b58c, 0x25578983, 0x2d558d82, 0x35538181,
   0x3d518580, 0x055f9987, 0x0d5d9d86, 0x155b9185, 0x1d599584,
   0xe567e99b, 0xed65ed9a, 0xf563e199, 0xfd61e598, 0xc56ff99f,
@@ -57,7 +57,7 @@ def generate_white_keys(bit, key):
 
 
 def generate_round_keys(bit, key):
-    # print('GEN ROUND KEYS :: PAR4AMS ::: ', bit, hex(key))
+    print('GEN ROUND KEYS :: PAR4AMS ::: ', bit, hex(key))
     ikey = int(key)
     skey = str(key)
     k = []
@@ -65,7 +65,7 @@ def generate_round_keys(bit, key):
     sbit = int(bit / 16)
 
     k = split_bits(key, 16)
-    # print('KEY SPLIT IN RK ::: ', [hex(x) for x in k])
+    print('KEY SPLIT IN RK ::: ', [hex(x) for x in k])
 
     if bit == 80:
         r = 25
@@ -86,7 +86,7 @@ def generate_round_keys(bit, key):
         # cons = cons80
         # print('RK80 SHAPES :: ',rk.shape, len(cons), hex(cons[5]), type(cons))
 
-        for i in range(r-1):
+        for i in range(r):
             #generate constant
             left, right = get_contsant_values(i, bit)
             cons[2*i] = left
@@ -122,15 +122,15 @@ def generate_round_keys(bit, key):
         rk = np.zeros((2 * r + 1), dtype=int)
         # cons = np.zeros(2 * (2 * r + 1), dtype=int)
         cons = cons128
-        print('RK128 SHAPES :: ', rk.shape, len(cons), type(cons))
+        # print('RK128 SHAPES :: ', rk.shape, len(cons), type(cons))
 
 
-        for i in range((2*r) - 1):
-            # # generate constant
-            # left, right = get_contsant_values(i, bit)
-            # cons[2 * i] = left
-            # cons[(2*i)+1] = right
-            # # print('\nCON128 RK :: ', i, hex(left), hex(right), hex(cons[2*i]), hex(cons[(2*i)+1]))
+        for i in range((2*r)):
+            # generate constant
+            left, right = get_contsant_values(i, bit)
+            cons[2 * i] = left
+            cons[(2*i)+1] = right
+            # print('\nCON128 RK :: ', i, hex(left), hex(right), hex(cons[2*i]), hex(cons[(2*i)+1]))
 
 
             # print('KEY BEFORE :: ', [hex(x) for x in k])

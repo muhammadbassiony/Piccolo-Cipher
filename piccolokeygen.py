@@ -1,6 +1,6 @@
 import random
 
-# THIS FN IS WRONG -- DO NOT USE
+# THIS FN IS CURRENTLY NOT WORKING -- DO NOT USE
 
 def piccolokeygen(bit):
     key = ""

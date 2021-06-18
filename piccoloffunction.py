@@ -5,23 +5,6 @@ from utils import split_bits, concat_split_num
 
 
 
-def split_bits_ffn(value, n):
-
-    mask, parts = (1 << n) - 1, []
-    # print('MASK :: ', hex(mask), bin(mask))
-    parts = []
-    while value:
-        parts.append(value & mask)
-        # print('APPENDED VAL :: ', hex(value & mask))
-        value >>= n
-        # print('NEW VAL/SHIFTED :: ', hex(value))
-
-    parts.reverse()
-    # print('PARTS AFTER REVERSAL :: ', [hex(x) for x in parts])
-    return parts
-
-
-
 # S-Box Layer
 sbox = {
     0x0: 0xe,
@@ -47,14 +30,14 @@ M = [[2, 3, 1, 1], [1, 2, 3, 1], [1, 1, 2, 3], [3, 1, 1, 2]]
 
 # Pass 16 bit data and returns 16 bit data
 def ffunction(X):
-    print('*'*20)
-    print('FFUNCTION BRO :: PARAM :: ', hex(X))
+    # print('*'*20)
+    # print('FFUNCTION :: PARAM :: ', hex(X))
 
     x = split_bits(X, 4)
     # print('SPLIT BLOCK IN F-FN:: ', len(x), [m for m in x], [hex(m) for m in x])
 
     while(len(x) <  4):
-        print('@'*10, 'F-FN HERE PREPENDING X :: ', len(x), [m for m in x], [hex(m) for m in x])
+        # print('@'*10, 'F-FN HERE PREPENDING X :: ', len(x), [m for m in x], [hex(m) for m in x])
         x.insert(0, 0)
 
     # print('F-FN BEFORE 1ST SBLOCK:: ', len(x), [m for m in x], [hex(m) for m in x])
@@ -118,7 +101,7 @@ def ffunction(X):
         # print('AAAA :: ', 4 * (3 - i), hex((x[i] << (4 * (3 - i)))))
         new_x = new_x | (x[i] << (4 * (3 - i)))
 
-    print('JOINED F-FN OUTPUT :: ', hex(new_x), len(bin(new_x)[2:]))
-    print('*' * 20)
+    # print('JOINED F-FN OUTPUT :: ', hex(new_x), len(bin(new_x)[2:]))
+    # print('*' * 20)
     return new_x
 

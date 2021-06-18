@@ -3,14 +3,14 @@ from utils import split_bits, concat_split_num
 
 # Pass 64 bit and returns 64 bit
 def round_permutation(X):
-    print('*' * 20)
-    print('RP PARAMS :: ', hex(X), len(bin(X)[2:]))
+    # print('*' * 20)
+    # print('RP PARAMS :: ', hex(X), len(bin(X)[2:]))
 
     x = split_bits(X, 8)
     # print('SPLIT BLOCK IN R-P - BEFORE PRENENDING:: ', len(x), [m for m in x], [hex(m) for m in x])
 
     while (len(x) < 8):
-        print('@'*10, 'HERE PREPENDING x R-P  :: ', len(x), [m for m in x], [hex(m) for m in x])
+        # print('@'*10, 'HERE PREPENDING x R-P  :: ', len(x), [m for m in x], [hex(m) for m in x])
         x.insert(0, 0)
 
     # print('R-P:: ', len(x), [m for m in x], [hex(m) for m in x])
@@ -34,6 +34,6 @@ def round_permutation(X):
         new_X.append(m)
 
 
-    print('RP OUTPUT PERMUTATED AND CONCATENATED BABY :: ', [ (hex(b),len(bin(b)[2:])) for b in new_X])
-    print('*' * 20)
+    # print('RP OUTPUT PERMUTATED AND CONCATENATED :: ', [ (hex(b),len(bin(b)[2:])) for b in new_X])
+    # print('*' * 20)
     return new_X

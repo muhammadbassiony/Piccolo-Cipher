@@ -28,7 +28,7 @@ def decrypt(Y, key,wk,rk, bit):
     # rk_new = np.array(['0'*16 for _ in range(2*r + 1)])
 
 
-    for i in range(r - 1):
+    for i in range(r):
         if(i%2 == 0):
             rk_new[2*i] = rk[(2*r) - (2*i) - 2]
             rk_new[(2*i) + 1] =  rk[(2*r) - (2*i) - 1]
@@ -37,7 +37,7 @@ def decrypt(Y, key,wk,rk, bit):
             rk_new[2 * i] = rk[(2 * r) - (2 * i) - 1]
             rk_new[(2 * i) + 1] = rk[(2 * r) - (2 * i) - 2]
 
-    # print(rk == list(rk_new).reverse())
+    print(rk == list(rk_new).reverse())
     x = piccoloencrypt.encrypt(Y, key, wk, rk_new, bit)
     # print(Y)
     # print(x)

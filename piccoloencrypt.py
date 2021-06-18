@@ -28,7 +28,7 @@ def encrypt(X, key, wk,rk, bit):
     # RP fn takes 1 64-bit block and returns it as 4 16-bit blocks
 
     # r = 4
-    for i in range(0, r-2, 1):
+    for i in range(0, r-1, 1):
         print('\nOIII NEW ROUND HERE  :: ', i)
 
         f1 = piccoloffunction.ffunction(x[0])

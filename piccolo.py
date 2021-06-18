@@ -23,8 +23,8 @@ class Piccolo:
         estring = ""
 
         #create 64-bit blocks and add padding
-        # blocks = utils.create_blocks(string)
-        blocks = [string]
+        blocks = utils.create_blocks(string)
+        # blocks = [string]
         print('ALL BLOCKS :: ', [hex(r) for r in blocks])
 
 
