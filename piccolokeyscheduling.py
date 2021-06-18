@@ -6,7 +6,8 @@ class InvalidValue(Exception):
         self.expression = message
         self.message = message
 
-# Pre calculated constants
+# Pre calculated constants -- this is a feature that removes the need to recalculate the constants each time
+# and thus saves a lot of computational power for the given IoT or other low powered device that utilizes Piccolo
 cons80 = [
   0x071c293d, 0x1f1a253e, 0x1718213f, 0x2f163d38, 0x27143939,
   0x3f12353a, 0x3710313b, 0x4f0e0d34, 0x470c0935, 0x5f0a0536,
@@ -27,14 +28,11 @@ cons128 = [
 
 
 def generate_white_keys(bit, key):
-    # print('GEN WHITE KEYS :: PAR4AMS ::: ', bit, key)
     ikey = int(key)
     k = []
     wk = []
 
-    # print('ENTERING SPLITTER :: ', bit, hex(key))
     k = split_bits(key, 16)
-    # print('KEY SPLIT ::: ', [hex(x) for x in k])
 
 
     if bit == 80:
@@ -50,92 +48,64 @@ def generate_white_keys(bit, key):
     else:
         raise InvalidValue('bit=' + str(bit), 'The value of bit can be 80 or 128')
 
-    print('WHITE KEYS GENNED :: ', hex(key) , [hex(x) for x in wk])
     return wk
 
 
 
 
 def generate_round_keys(bit, key):
-    print('GEN ROUND KEYS :: PAR4AMS ::: ', bit, hex(key))
-    ikey = int(key)
-    skey = str(key)
-    k = []
-    rk = []
-    sbit = int(bit / 16)
 
+    k = []
     k = split_bits(key, 16)
-    print('KEY SPLIT IN RK ::: ', [hex(x) for x in k])
 
     if bit == 80:
         r = 25
     elif bit == 128:
         r = 31
 
-
-    # rk = np.zeros((2*r + 2), dtype=int)
-    # cons = np.zeros((2*r + 2), dtype=int)
-    # print(rk.shape, cons.shape, type(cons), (2*r + 1), 2*r-1)
-    # print('ZERO CHECK :: ', [hex(x) for x in cons])
-
-
     if bit == 80:
-
         rk = np.zeros((2 * r), dtype=int)
         cons = np.zeros((2 * r), dtype=int)
         # cons = cons80
-        # print('RK80 SHAPES :: ',rk.shape, len(cons), hex(cons[5]), type(cons))
+
 
         for i in range(r):
             #generate constant
             left, right = get_contsant_values(i, bit)
             cons[2*i] = left
             cons[(2*i)+1] = right
-            # print('CON80 RK :: ', i, hex(l), hex(r), hex(cons[2*i]), hex(cons[(2*i)+1]))
 
             if i % 5 == 2 or i % 5 == 0:
                 z = cons[2*i] ^ k[2]
-                # print('ZZ 1 :: ', hex(cons[2 * i]), hex(cons80[i]), hex(k[2]), hex(z))
                 rk[2*i] = z
-
                 z = cons[(2*i)+1] ^ k[3]
                 rk[2*i + 1] = z
 
             elif i % 5 == 1 or i % 5 == 4:
                 z = cons[2 * i] ^ k[0]
                 rk[2 * i] = z
-
                 z = cons[(2*i)+1] ^ k[1]
                 rk[2 * i + 1] = z
 
             elif i % 5 == 3:
                 z = cons[2 * i] ^ k[4]
                 rk[2 * i] = z
-
                 z = cons[(2*i)+1] ^ k[4]
                 rk[2 * i + 1] = z
 
-        # print('DONE 80 RK GEN :: ')
 
     elif bit == 128:
-
         rk = np.zeros((2 * r + 1), dtype=int)
-        # cons = np.zeros(2 * (2 * r + 1), dtype=int)
-        cons = cons128
-        # print('RK128 SHAPES :: ', rk.shape, len(cons), type(cons))
-
+        cons = np.zeros(2 * (2 * r + 1), dtype=int)
+        # cons = cons128
 
         for i in range((2*r)):
             # generate constant
             left, right = get_contsant_values(i, bit)
             cons[2 * i] = left
             cons[(2*i)+1] = right
-            # print('\nCON128 RK :: ', i, hex(left), hex(right), hex(cons[2*i]), hex(cons[(2*i)+1]))
 
-
-            # print('KEY BEFORE :: ', [hex(x) for x in k])
             if (i + 2) % 8 == 0:
-                # print('SWITCHEROO', [hex(x) for x in k])
                 tmp = k
                 k[0] = tmp[2]
                 k[2] = tmp[6]
@@ -144,7 +114,6 @@ def generate_round_keys(bit, key):
                 k[5] = tmp[3]
                 k[6] = tmp[4]
                 k[7] = tmp[5]
-                # print('KEY AFTER :: ', [hex(x) for x in k])
 
             indx = (i + 1) % 8
             z = k[indx] ^ cons[i]
@@ -153,7 +122,6 @@ def generate_round_keys(bit, key):
     else:
         raise InvalidValue('bit=' + str(bit), 'The value of bit can be 80 or 128')
 
-    print('ROUND KEYS GENNED :: ', rk.shape, [hex(x) for x in rk])
     return rk
 
 

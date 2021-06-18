@@ -1,6 +1,7 @@
 import random
 
 # THIS FN IS CURRENTLY NOT WORKING -- DO NOT USE
+# TODO :: return an int not a random string - very simple ~ 1 line of code
 
 def piccolokeygen(bit):
     key = ""
